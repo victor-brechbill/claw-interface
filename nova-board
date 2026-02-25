@@ -1,0 +1,416 @@
+#!/usr/bin/env bash
+#
+# nova-board - CLI tool for Nova Dashboard Kanban board
+# Makes it easy for Nova (or anyone) to manage cards from the terminal
+#
+
+set -e
+
+API_URL="${NOVA_BOARD_API:-http://localhost:3080}"
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+BOLD='\033[1m'
+
+# Column display names and colors
+column_color() {
+  case "$1" in
+    backlog) echo -e "${BLUE}Backlog${NC}" ;;
+    in_progress) echo -e "${YELLOW}In Progress${NC}" ;;
+    review) echo -e "${PURPLE}Review${NC}" ;;
+    done) echo -e "${GREEN}Done${NC}" ;;
+    *) echo "$1" ;;
+  esac
+}
+
+# Priority colors
+priority_color() {
+  case "$1" in
+    high) echo -e "${RED}high${NC}" ;;
+    medium) echo -e "${YELLOW}medium${NC}" ;;
+    low) echo -e "${GREEN}low${NC}" ;;
+    *) echo "$1" ;;
+  esac
+}
+
+# Type emoji
+type_icon() {
+  case "$1" in
+    feature) echo "✨" ;;
+    bug) echo "🐛" ;;
+    improvement) echo "🔧" ;;
+    idea) echo "💡" ;;
+    *) echo "📋" ;;
+  esac
+}
+
+usage() {
+  cat << EOF
+${BOLD}nova-board${NC} - Kanban board CLI for Nova Dashboard
+
+${BOLD}USAGE:${NC}
+    nova-board <command> [options]
+
+${BOLD}COMMANDS:${NC}
+    ${CYAN}list${NC} [column]           List cards (optionally filter by column)
+    ${CYAN}show${NC} <id>               Show card details
+    ${CYAN}create${NC} <title>          Create a new card
+    ${CYAN}move${NC} <id> <column>      Move card to column
+    ${CYAN}comment${NC} <id> <text>     Add comment to card
+    ${CYAN}edit${NC} <id> [options]     Edit card properties
+    ${CYAN}delete${NC} <id>             Delete a card
+    ${CYAN}search${NC} <query>          Search cards by title/description
+    ${CYAN}columns${NC}                 List available columns
+
+${BOLD}COLUMNS:${NC}
+    backlog, in_progress, review, done
+
+${BOLD}OPTIONS FOR CREATE:${NC}
+    --type <type>         feature, bug, improvement, idea
+    --priority <priority> low, medium, high
+    --assignee <name>     Assignee name
+    --column <column>     Starting column (default: backlog)
+
+${BOLD}OPTIONS FOR EDIT:${NC}
+    --title <title>       Update title
+    --description <desc>  Update description
+    --type <type>         Update type
+    --priority <priority> Update priority
+    --assignee <name>     Update assignee
+
+${BOLD}EXAMPLES:${NC}
+    nova-board list
+    nova-board list backlog
+    nova-board create "Add dark mode" --type feature --priority medium
+    nova-board move abc123 in_progress
+    nova-board comment abc123 "Started working on this"
+    nova-board search "mobile"
+
+${BOLD}ENVIRONMENT:${NC}
+    NOVA_BOARD_API    API URL (default: http://localhost:3080)
+EOF
+}
+
+# Fetch all cards
+fetch_cards() {
+  curl -s "${API_URL}/api/cards"
+}
+
+# List cards
+cmd_list() {
+  local filter_column="$1"
+  local cards=$(fetch_cards)
+  
+  if [ -n "$filter_column" ]; then
+    cards=$(echo "$cards" | jq -r "[.[] | select(.column == \"$filter_column\")]")
+  fi
+  
+  echo "$cards" | jq -r '.[] | "\(.id)|\(.column)|\(.type)|\(.priority)|\(.title)"' | while IFS='|' read -r id column type priority title; do
+    local col=$(column_color "$column")
+    local pri=$(priority_color "$priority")
+    local icon=$(type_icon "$type")
+    printf "${BOLD}%.8s${NC}  %s  %-14s  %s  %s\n" "$id" "$icon" "$col" "$pri" "$title"
+  done
+}
+
+# Show card details
+cmd_show() {
+  local id="$1"
+  if [ -z "$id" ]; then
+    echo -e "${RED}Error: Card ID required${NC}" >&2
+    exit 1
+  fi
+  
+  # Support partial IDs
+  local cards=$(fetch_cards)
+  local card=$(echo "$cards" | jq -r ".[] | select(.id | startswith(\"$id\"))")
+  
+  if [ -z "$card" ]; then
+    echo -e "${RED}Error: Card not found${NC}" >&2
+    exit 1
+  fi
+  
+  local full_id=$(echo "$card" | jq -r '.id')
+  local title=$(echo "$card" | jq -r '.title')
+  local desc=$(echo "$card" | jq -r '.description // "No description"')
+  local type=$(echo "$card" | jq -r '.type')
+  local priority=$(echo "$card" | jq -r '.priority')
+  local column=$(echo "$card" | jq -r '.column')
+  local assignee=$(echo "$card" | jq -r '.assignee // "unassigned"')
+  local created=$(echo "$card" | jq -r '.created_at')
+  local comments=$(echo "$card" | jq -r '.comments // []')
+  
+  echo -e "${BOLD}${title}${NC}"
+  echo -e "${CYAN}ID:${NC} $full_id"
+  echo -e "${CYAN}Column:${NC} $(column_color "$column")"
+  echo -e "${CYAN}Type:${NC} $(type_icon "$type") $type"
+  echo -e "${CYAN}Priority:${NC} $(priority_color "$priority")"
+  echo -e "${CYAN}Assignee:${NC} $assignee"
+  echo -e "${CYAN}Created:${NC} $created"
+  echo ""
+  echo -e "${CYAN}Description:${NC}"
+  echo "$desc"
+  
+  local comment_count=$(echo "$comments" | jq 'length')
+  if [ "$comment_count" -gt 0 ]; then
+    echo ""
+    echo -e "${CYAN}Comments (${comment_count}):${NC}"
+    echo "$comments" | jq -r '.[] | "  \(.author): \(.text)"'
+  fi
+}
+
+# Create a card
+cmd_create() {
+  local title=""
+  local type="feature"
+  local priority="medium"
+  local assignee="nova"
+  local column="backlog"
+  local description=""
+  
+  # Parse arguments
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --type) type="$2"; shift 2 ;;
+      --priority) priority="$2"; shift 2 ;;
+      --assignee) assignee="$2"; shift 2 ;;
+      --column) column="$2"; shift 2 ;;
+      --description) description="$2"; shift 2 ;;
+      -*) echo -e "${RED}Unknown option: $1${NC}" >&2; exit 1 ;;
+      *) 
+        if [ -z "$title" ]; then
+          title="$1"
+        else
+          description="$1"
+        fi
+        shift
+        ;;
+    esac
+  done
+  
+  if [ -z "$title" ]; then
+    echo -e "${RED}Error: Title required${NC}" >&2
+    exit 1
+  fi
+  
+  local payload=$(jq -n \
+    --arg title "$title" \
+    --arg type "$type" \
+    --arg priority "$priority" \
+    --arg assignee "$assignee" \
+    --arg column "$column" \
+    --arg description "$description" \
+    '{title: $title, type: $type, priority: $priority, assignee: $assignee, column: $column, description: $description}')
+  
+  local result=$(curl -s -X POST "${API_URL}/api/cards" \
+    -H "Content-Type: application/json" \
+    -d "$payload")
+  
+  local id=$(echo "$result" | jq -r '.id // empty')
+  if [ -n "$id" ]; then
+    echo -e "${GREEN}✓${NC} Created card ${BOLD}$id${NC}: $title"
+  else
+    echo -e "${RED}Error creating card:${NC} $result" >&2
+    exit 1
+  fi
+}
+
+# Move a card
+cmd_move() {
+  local id="$1"
+  local column="$2"
+  
+  if [ -z "$id" ] || [ -z "$column" ]; then
+    echo -e "${RED}Error: Card ID and column required${NC}" >&2
+    echo "Usage: nova-board move <id> <column>"
+    exit 1
+  fi
+  
+  # Validate column
+  case "$column" in
+    backlog|in_progress|review|done) ;;
+    *) echo -e "${RED}Error: Invalid column. Use: backlog, in_progress, review, done${NC}" >&2; exit 1 ;;
+  esac
+  
+  # Find full ID
+  local cards=$(fetch_cards)
+  local full_id=$(echo "$cards" | jq -r ".[] | select(.id | startswith(\"$id\")) | .id" | head -1)
+  
+  if [ -z "$full_id" ]; then
+    echo -e "${RED}Error: Card not found${NC}" >&2
+    exit 1
+  fi
+  
+  local result=$(curl -s -X PUT "${API_URL}/api/cards/${full_id}" \
+    -H "Content-Type: application/json" \
+    -d "{\"column\": \"$column\"}")
+  
+  local new_col=$(echo "$result" | jq -r '.column // empty')
+  if [ "$new_col" = "$column" ]; then
+    local title=$(echo "$result" | jq -r '.title')
+    echo -e "${GREEN}✓${NC} Moved ${BOLD}$title${NC} to $(column_color "$column")"
+  else
+    echo -e "${RED}Error moving card:${NC} $result" >&2
+    exit 1
+  fi
+}
+
+# Add comment to card
+cmd_comment() {
+  local id="$1"
+  shift
+  local text="$*"
+  
+  if [ -z "$id" ] || [ -z "$text" ]; then
+    echo -e "${RED}Error: Card ID and comment text required${NC}" >&2
+    echo "Usage: nova-board comment <id> <text>"
+    exit 1
+  fi
+  
+  # Find full ID
+  local cards=$(fetch_cards)
+  local full_id=$(echo "$cards" | jq -r ".[] | select(.id | startswith(\"$id\")) | .id" | head -1)
+  
+  if [ -z "$full_id" ]; then
+    echo -e "${RED}Error: Card not found${NC}" >&2
+    exit 1
+  fi
+  
+  local payload=$(jq -n --arg author "Nova" --arg text "$text" '{author: $author, text: $text}')
+  
+  local result=$(curl -s -X POST "${API_URL}/api/cards/${full_id}/comments" \
+    -H "Content-Type: application/json" \
+    -d "$payload")
+  
+  local title=$(echo "$result" | jq -r '.title // empty')
+  if [ -n "$title" ]; then
+    echo -e "${GREEN}✓${NC} Added comment to ${BOLD}$title${NC}"
+  else
+    echo -e "${RED}Error adding comment:${NC} $result" >&2
+    exit 1
+  fi
+}
+
+# Edit card
+cmd_edit() {
+  local id="$1"
+  shift
+  
+  if [ -z "$id" ]; then
+    echo -e "${RED}Error: Card ID required${NC}" >&2
+    exit 1
+  fi
+  
+  # Find full ID
+  local cards=$(fetch_cards)
+  local full_id=$(echo "$cards" | jq -r ".[] | select(.id | startswith(\"$id\")) | .id" | head -1)
+  
+  if [ -z "$full_id" ]; then
+    echo -e "${RED}Error: Card not found${NC}" >&2
+    exit 1
+  fi
+  
+  # Build update payload
+  local updates="{}"
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --title) updates=$(echo "$updates" | jq --arg v "$2" '. + {title: $v}'); shift 2 ;;
+      --description) updates=$(echo "$updates" | jq --arg v "$2" '. + {description: $v}'); shift 2 ;;
+      --type) updates=$(echo "$updates" | jq --arg v "$2" '. + {type: $v}'); shift 2 ;;
+      --priority) updates=$(echo "$updates" | jq --arg v "$2" '. + {priority: $v}'); shift 2 ;;
+      --assignee) updates=$(echo "$updates" | jq --arg v "$2" '. + {assignee: $v}'); shift 2 ;;
+      *) echo -e "${RED}Unknown option: $1${NC}" >&2; exit 1 ;;
+    esac
+  done
+  
+  if [ "$updates" = "{}" ]; then
+    echo -e "${RED}Error: No updates specified${NC}" >&2
+    exit 1
+  fi
+  
+  local result=$(curl -s -X PUT "${API_URL}/api/cards/${full_id}" \
+    -H "Content-Type: application/json" \
+    -d "$updates")
+  
+  local title=$(echo "$result" | jq -r '.title // empty')
+  if [ -n "$title" ]; then
+    echo -e "${GREEN}✓${NC} Updated ${BOLD}$title${NC}"
+  else
+    echo -e "${RED}Error updating card:${NC} $result" >&2
+    exit 1
+  fi
+}
+
+# Delete card
+cmd_delete() {
+  local id="$1"
+  
+  if [ -z "$id" ]; then
+    echo -e "${RED}Error: Card ID required${NC}" >&2
+    exit 1
+  fi
+  
+  # Find full ID and title
+  local cards=$(fetch_cards)
+  local card=$(echo "$cards" | jq -r ".[] | select(.id | startswith(\"$id\"))")
+  local full_id=$(echo "$card" | jq -r '.id')
+  local title=$(echo "$card" | jq -r '.title')
+  
+  if [ -z "$full_id" ]; then
+    echo -e "${RED}Error: Card not found${NC}" >&2
+    exit 1
+  fi
+  
+  curl -s -X DELETE "${API_URL}/api/cards/${full_id}" > /dev/null
+  echo -e "${GREEN}✓${NC} Deleted ${BOLD}$title${NC}"
+}
+
+# Search cards
+cmd_search() {
+  local query="$1"
+  
+  if [ -z "$query" ]; then
+    echo -e "${RED}Error: Search query required${NC}" >&2
+    exit 1
+  fi
+  
+  local cards=$(fetch_cards)
+  local lower_query=$(echo "$query" | tr '[:upper:]' '[:lower:]')
+  
+  echo "$cards" | jq -r ".[] | select((.title | ascii_downcase | contains(\"$lower_query\")) or (.description | ascii_downcase | contains(\"$lower_query\"))) | \"\(.id)|\(.column)|\(.type)|\(.priority)|\(.title)\"" | while IFS='|' read -r id column type priority title; do
+    local col=$(column_color "$column")
+    local pri=$(priority_color "$priority")
+    local icon=$(type_icon "$type")
+    printf "${BOLD}%.8s${NC}  %s  %-14s  %s  %s\n" "$id" "$icon" "$col" "$pri" "$title"
+  done
+}
+
+# List columns
+cmd_columns() {
+  echo -e "$(column_color backlog)"
+  echo -e "$(column_color in_progress)"
+  echo -e "$(column_color review)"
+  echo -e "$(column_color done)"
+}
+
+# Main
+case "${1:-}" in
+  list) shift; cmd_list "$@" ;;
+  show) shift; cmd_show "$@" ;;
+  create) shift; cmd_create "$@" ;;
+  move) shift; cmd_move "$@" ;;
+  comment) shift; cmd_comment "$@" ;;
+  edit) shift; cmd_edit "$@" ;;
+  delete) shift; cmd_delete "$@" ;;
+  search) shift; cmd_search "$@" ;;
+  columns) cmd_columns ;;
+  help|--help|-h) usage ;;
+  "") usage ;;
+  *) echo -e "${RED}Unknown command: $1${NC}" >&2; echo "Run 'nova-board help' for usage."; exit 1 ;;
+esac

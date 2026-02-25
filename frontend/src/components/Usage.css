@@ -1,0 +1,493 @@
+/* Usage Page - BIOS Theme */
+.usage-page {
+  font-family: 'Courier New', monospace;
+  background: #000;
+  color: #c0c0c0;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.usage-page .bios-header {
+  text-align: center;
+  border-bottom: 2px solid #c0c0c0;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.usage-page .bios-title {
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.usage-page .bios-subtitle {
+  font-size: 14px;
+  color: #808080;
+  margin-top: 0.25rem;
+}
+
+/* Controls bar */
+.usage-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.usage-range-buttons {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.usage-range-buttons button {
+  font-family: 'Courier New', monospace;
+  background: #000;
+  color: #c0c0c0;
+  border: 1px solid #c0c0c0;
+  padding: 0.25rem 0.75rem;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.usage-range-buttons button:hover {
+  background: #333;
+}
+
+.usage-range-buttons button.active {
+  background: #c0c0c0;
+  color: #000;
+  font-weight: bold;
+}
+
+.usage-export-btn {
+  font-family: 'Courier New', monospace;
+  background: #000;
+  color: #58a6ff;
+  border: 1px solid #58a6ff;
+  padding: 0.25rem 0.75rem;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.usage-export-btn:hover {
+  background: #112;
+}
+
+/* Stale banner */
+.usage-stale-banner {
+  background: #332b00;
+  border: 1px solid #ffff00;
+  color: #ffff00;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* Summary cards */
+.usage-summary-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.usage-summary-card {
+  border: 1px solid #c0c0c0;
+  background: #000;
+}
+
+.usage-summary-card .card-label {
+  background: #c0c0c0;
+  color: #000;
+  font-weight: bold;
+  padding: 0.25rem 0.5rem;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.usage-summary-card .card-value {
+  padding: 0.75rem 0.5rem;
+  font-size: 20px;
+  font-weight: bold;
+  color: #00ff00;
+  text-align: center;
+}
+
+/* Two-column layout */
+.usage-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.usage-grid-full {
+  grid-column: 1 / -1;
+}
+
+/* Daily bar chart */
+.daily-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 160px;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #555;
+}
+
+.daily-bar-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: flex-end;
+  cursor: pointer;
+  position: relative;
+}
+
+.daily-bar {
+  width: 100%;
+  max-width: 24px;
+  display: flex;
+  flex-direction: column-reverse;
+  min-height: 2px;
+}
+
+.daily-bar-segment {
+  width: 100%;
+}
+
+.daily-bar-segment.output { background: #c9a0dc; }
+.daily-bar-segment.input { background: #58a6ff; }
+.daily-bar-segment.cache-read { background: #3fb950; }
+.daily-bar-segment.cache-write { background: #e3b341; }
+
+.daily-bar-date {
+  font-size: 9px;
+  color: #808080;
+  margin-top: 4px;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  max-height: 45px;
+  overflow: hidden;
+}
+
+.daily-bar-wrapper.selected {
+  background: rgba(192, 192, 192, 0.1);
+}
+
+.daily-bar-tooltip {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #222;
+  border: 1px solid #c0c0c0;
+  padding: 0.5rem;
+  font-size: 11px;
+  white-space: nowrap;
+  z-index: 10;
+  color: #c0c0c0;
+}
+
+.daily-bar-wrapper:hover .daily-bar-tooltip {
+  display: block;
+}
+
+.daily-bar-tooltip .tooltip-cost {
+  color: #00ff00;
+  font-weight: bold;
+}
+
+/* Cost by type bar */
+.cost-type-bar {
+  display: flex;
+  height: 28px;
+  border: 1px solid #555;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+}
+
+.cost-type-segment {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: #000;
+  font-weight: bold;
+  overflow: hidden;
+}
+
+.cost-type-segment.output { background: #c9a0dc; }
+.cost-type-segment.input { background: #58a6ff; }
+.cost-type-segment.cache-read { background: #3fb950; }
+.cost-type-segment.cache-write { background: #e3b341; }
+
+.cost-type-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-size: 12px;
+}
+
+.cost-type-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.cost-type-legend-swatch {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+}
+
+.cost-type-legend-swatch.output { background: #c9a0dc; }
+.cost-type-legend-swatch.input { background: #58a6ff; }
+.cost-type-legend-swatch.cache-read { background: #3fb950; }
+.cost-type-legend-swatch.cache-write { background: #e3b341; }
+
+/* Agent cost list */
+.agent-cost-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.agent-cost-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 13px;
+}
+
+.agent-cost-name {
+  width: 100px;
+  flex-shrink: 0;
+  color: #fff;
+}
+
+.agent-cost-bar-bg {
+  flex: 1;
+  height: 16px;
+  background: #222;
+  position: relative;
+  overflow: hidden;
+}
+
+.agent-cost-bar-fill {
+  height: 100%;
+  background: #c9a0dc;
+  transition: width 0.3s;
+}
+
+.agent-cost-value {
+  width: 80px;
+  flex-shrink: 0;
+  text-align: right;
+  color: #00ff00;
+  font-size: 12px;
+}
+
+.agent-cost-pct {
+  width: 45px;
+  flex-shrink: 0;
+  text-align: right;
+  color: #808080;
+  font-size: 12px;
+}
+
+/* Sessions table */
+.sessions-table-wrapper {
+  overflow-x: auto;
+}
+
+.sessions-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.sessions-table th {
+  background: #c0c0c0;
+  color: #000;
+  font-weight: bold;
+  padding: 0.35rem 0.5rem;
+  text-align: left;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.sessions-table th:hover {
+  background: #ddd;
+}
+
+.sessions-table th .sort-indicator {
+  margin-left: 0.25rem;
+  font-size: 10px;
+}
+
+.sessions-table td {
+  padding: 0.35rem 0.5rem;
+  border-bottom: 1px solid #333;
+  white-space: nowrap;
+}
+
+.sessions-table tr:hover td {
+  background: #111;
+}
+
+.sessions-table .cost-cell {
+  color: #00ff00;
+  font-weight: bold;
+}
+
+.sessions-table .tokens-cell {
+  color: #58a6ff;
+}
+
+.sessions-table .agent-cell {
+  color: #c9a0dc;
+}
+
+.sessions-table .model-cell {
+  color: #808080;
+}
+
+.sessions-table .duration-cell {
+  color: #e3b341;
+}
+
+/* Subscription note */
+.usage-subscription-note {
+  margin-top: 1.5rem;
+  padding: 0.5rem;
+  border: 1px solid #555;
+  font-size: 12px;
+  color: #808080;
+  text-align: center;
+}
+
+.usage-subscription-note span {
+  color: #00ff00;
+}
+
+/* Loading/Error states */
+.usage-loading,
+.usage-error {
+  text-align: center;
+  padding: 3rem 1rem;
+  font-size: 14px;
+}
+
+.usage-loading {
+  color: #808080;
+}
+
+.usage-error {
+  color: #ff0000;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .usage-summary-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .usage-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .usage-summary-card .card-value {
+    font-size: 16px;
+  }
+
+  .sessions-table {
+    font-size: 11px;
+  }
+
+  .daily-chart {
+    height: 120px;
+  }
+
+  .daily-bar-date {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .usage-summary-cards {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .agent-cost-name {
+    width: 70px;
+    font-size: 11px;
+  }
+
+  .agent-cost-value {
+    width: 60px;
+  }
+}
+
+/* Provider badges */
+.provider-badge {
+  display: inline-block;
+  font-size: 9px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-left: 6px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  vertical-align: middle;
+  text-transform: uppercase;
+}
+
+.provider-anthropic {
+  background: #3d2b1f;
+  color: #d97706;
+  border: 1px solid #78350f;
+}
+
+.provider-xai {
+  background: #1a1a2e;
+  color: #6366f1;
+  border: 1px solid #4338ca;
+}
+
+.provider-openai {
+  background: #0a2010;
+  color: #22c55e;
+  border: 1px solid #15803d;
+}
+
+/* Subscription cost label in agent list */
+.agent-cost-subscription {
+  font-size: 11px;
+  color: #a78bfa;
+}
+
+.agent-cost-sub-label {
+  display: block;
+  font-size: 9px;
+  color: #d97706;
+  font-style: italic;
+}
+
+/* "included" badge in sessions table */
+.cost-included {
+  font-size: 10px;
+  color: #d97706;
+  font-style: italic;
+  letter-spacing: 0.3px;
+}

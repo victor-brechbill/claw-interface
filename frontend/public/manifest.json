@@ -1,0 +1,35 @@
+{
+  "id": "nova-dashboard",
+  "name": "Nova Dashboard",
+  "short_name": "Nova",
+  "description": "Nova Dashboard - Kanban board and system management",
+  "scope": "/",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1a1a",
+  "theme_color": "#c9a0dc",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icon-192x192-v2.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512-v2.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-192x192-v2.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/icon-512x512-v2.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "screenshots": []
+}
