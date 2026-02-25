@@ -1,0 +1,61 @@
+#!/bin/sh
+echo "🔍 Running pre-commit checks..."
+
+# Get repo root for reliable paths
+REPO_ROOT=$(git rev-parse --show-toplevel)
+
+# Run lint-staged (ESLint + Prettier on staged frontend files)
+echo "  → lint-staged (frontend ESLint + Prettier)"
+npx lint-staged
+if [ $? -ne 0 ]; then
+    echo "    ❌ Frontend linting failed"
+    exit 1
+fi
+
+# TypeScript type check (frontend)
+echo "  → TypeScript type check (frontend)"
+(cd "$REPO_ROOT/frontend" && npx tsc --noEmit)
+if [ $? -ne 0 ]; then
+    echo "    ❌ TypeScript type check failed"
+    exit 1
+fi
+
+# Go formatting check (backend)
+echo "  → Go format check (backend)"
+UNFORMATTED=$(cd "$REPO_ROOT/backend" && gofmt -l . 2>/dev/null | grep -v vendor || true)
+if [ -n "$UNFORMATTED" ]; then
+    echo "    ❌ Unformatted Go files:"
+    echo "$UNFORMATTED" | sed 's/^/      /'
+    echo "    Run: cd backend && gofmt -w ."
+    exit 1
+fi
+
+# Go vet (backend)
+echo "  → Go static analysis (go vet)"
+(cd "$REPO_ROOT/backend" && go vet ./...)
+if [ $? -ne 0 ]; then
+    echo "    ❌ go vet failed"
+    exit 1
+fi
+
+# Security: Gitleaks (secret detection)
+echo "  → Gitleaks (secret detection)"
+if command -v gitleaks > /dev/null 2>&1; then
+    gitleaks protect --staged --verbose
+    if [ $? -ne 0 ]; then
+        echo "    ❌ SECRETS DETECTED! Remove them before committing."
+        exit 1
+    fi
+else
+    echo "    ❌ gitleaks not installed at /usr/local/bin/gitleaks"
+    exit 1
+fi
+
+# Security: npm audit (warning only, don't block)
+echo "  → npm audit (frontend dependencies)"
+(cd "$REPO_ROOT/frontend" && npm audit --audit-level=high 2>/dev/null) || {
+    echo "    ⚠️  Dependency vulnerabilities found (review with 'npm audit' in frontend/)"
+    echo "    ⚠️  This is a warning - commit continues"
+}
+
+echo "✅ Pre-commit checks passed"

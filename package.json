@@ -1,0 +1,27 @@
+{
+  "name": "nova-dashboard",
+  "private": true,
+  "description": "Nova Dashboard - monorepo root for development tooling",
+  "scripts": {
+    "prepare": "husky",
+    "lint": "cd frontend && npm run lint",
+    "typecheck": "cd frontend && npm run build -- --noEmit 2>/dev/null || tsc -b --noEmit",
+    "frontend:install": "cd frontend && npm install",
+    "frontend:dev": "cd frontend && npm run dev",
+    "frontend:build": "cd frontend && npm run build"
+  },
+  "devDependencies": {
+    "husky": "^9.0.0",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.8.1"
+  },
+  "lint-staged": {
+    "frontend/**/*.{js,jsx,ts,tsx}": [
+      "frontend/node_modules/.bin/eslint --fix --config frontend/eslint.config.js",
+      "prettier --write"
+    ],
+    "**/*.{json,md,yml,yaml}": [
+      "prettier --write"
+    ]
+  }
+}

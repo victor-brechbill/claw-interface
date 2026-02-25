@@ -1,0 +1,242 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background gradient - semi-transparent black/purple -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a0a20;stop-opacity:0.95"/>
+      <stop offset="50%" style="stop-color:#0d0812;stop-opacity:0.97"/>
+      <stop offset="100%" style="stop-color:#150d1a;stop-opacity:0.95"/>
+    </linearGradient>
+    
+    <!-- Eye glow gradient - matches canvas: white center -> teal -> fade -->
+    <radialGradient id="eyeGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#ffffff"/>
+      <stop offset="20%" style="stop-color:#dcfffa"/>
+      <stop offset="40%" style="stop-color:#96f0e6"/>
+      <stop offset="60%" style="stop-color:rgba(64,224,208,0.35)"/>
+      <stop offset="80%" style="stop-color:rgba(64,224,208,0.15)"/>
+      <stop offset="100%" style="stop-color:rgba(64,224,208,0)"/>
+    </radialGradient>
+    
+    <!-- Star glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="512" height="512" rx="96" fill="url(#bgGrad)"/>
+  
+  <!-- 
+    Coordinates based on canvas code:
+    - centerX = 256, centerY = 230 (shifted up 5%)
+    - faceRadius = 179
+    - eyeY = 203, eyeSpacing = 68 (eyes at x=188 and x=324)
+    - mouthY = 266, mouthWidth = 32, mouthDepth = 21.5
+  -->
+  
+  <!-- Static connection lines (background web) - simplified -->
+  <g stroke="#40E0D0" stroke-width="0.5" opacity="0.35" fill="none">
+    <!-- Outer web connections -->
+    <line x1="120" y1="150" x2="160" y2="120"/>
+    <line x1="160" y1="120" x2="220" y2="100"/>
+    <line x1="220" y1="100" x2="290" y2="100"/>
+    <line x1="290" y1="100" x2="350" y2="120"/>
+    <line x1="350" y1="120" x2="390" y2="150"/>
+    <line x1="390" y1="150" x2="410" y2="200"/>
+    <line x1="410" y1="200" x2="415" y2="260"/>
+    <line x1="415" y1="260" x2="400" y2="320"/>
+    <line x1="400" y1="320" x2="370" y2="370"/>
+    <line x1="370" y1="370" x2="320" y2="400"/>
+    <line x1="320" y1="400" x2="256" y2="410"/>
+    <line x1="256" y1="410" x2="192" y2="400"/>
+    <line x1="192" y1="400" x2="142" y2="370"/>
+    <line x1="142" y1="370" x2="112" y2="320"/>
+    <line x1="112" y1="320" x2="97" y2="260"/>
+    <line x1="97" y1="260" x2="102" y2="200"/>
+    <line x1="102" y1="200" x2="120" y2="150"/>
+    <!-- Cross connections -->
+    <line x1="120" y1="150" x2="180" y2="180"/>
+    <line x1="390" y1="150" x2="330" y2="180"/>
+    <line x1="102" y1="200" x2="150" y2="230"/>
+    <line x1="410" y1="200" x2="362" y2="230"/>
+    <line x1="142" y1="370" x2="200" y2="340"/>
+    <line x1="370" y1="370" x2="312" y2="340"/>
+  </g>
+  
+  <!-- Ring stars - 4 layers forming the face outline -->
+  <!-- Layer 0: outermost at radius ~179 -->
+  <g fill="#40E0D0" filter="url(#glow)">
+    <!-- Top arc -->
+    <circle cx="256" cy="51" r="3"/>
+    <circle cx="300" cy="55" r="2.5"/>
+    <circle cx="212" cy="55" r="2.5"/>
+    <circle cx="343" cy="68" r="2.5"/>
+    <circle cx="169" cy="68" r="2.5"/>
+    <circle cx="380" cy="92" r="2"/>
+    <circle cx="132" cy="92" r="2"/>
+    
+    <!-- Right side -->
+    <circle cx="408" cy="125" r="2.5"/>
+    <circle cx="425" cy="165" r="3"/>
+    <circle cx="432" cy="210" r="2.5"/>
+    <circle cx="430" cy="256" r="3"/>
+    <circle cx="420" cy="300" r="2.5"/>
+    <circle cx="400" cy="340" r="2"/>
+    
+    <!-- Bottom arc -->
+    <circle cx="372" cy="375" r="2.5"/>
+    <circle cx="335" cy="398" r="2.5"/>
+    <circle cx="295" cy="408" r="3"/>
+    <circle cx="256" cy="412" r="3"/>
+    <circle cx="217" cy="408" r="3"/>
+    <circle cx="177" cy="398" r="2.5"/>
+    <circle cx="140" cy="375" r="2.5"/>
+    
+    <!-- Left side -->
+    <circle cx="112" cy="340" r="2"/>
+    <circle cx="92" cy="300" r="2.5"/>
+    <circle cx="82" cy="256" r="3"/>
+    <circle cx="80" cy="210" r="2.5"/>
+    <circle cx="87" cy="165" r="3"/>
+    <circle cx="104" cy="125" r="2.5"/>
+  </g>
+  
+  <!-- Layer 1: radius ~169 -->
+  <g fill="#40E0D0" opacity="0.9" filter="url(#glow)">
+    <circle cx="256" cy="62" r="2.5"/>
+    <circle cx="310" cy="70" r="2"/>
+    <circle cx="202" cy="70" r="2"/>
+    <circle cx="358" cy="95" r="2"/>
+    <circle cx="154" cy="95" r="2"/>
+    <circle cx="395" cy="135" r="2"/>
+    <circle cx="117" cy="135" r="2"/>
+    <circle cx="415" cy="185" r="2.5"/>
+    <circle cx="97" cy="185" r="2.5"/>
+    <circle cx="418" cy="240" r="2"/>
+    <circle cx="94" cy="240" r="2"/>
+    <circle cx="410" cy="290" r="2"/>
+    <circle cx="102" cy="290" r="2"/>
+    <circle cx="388" cy="338" r="2"/>
+    <circle cx="124" cy="338" r="2"/>
+    <circle cx="352" cy="378" r="2"/>
+    <circle cx="160" cy="378" r="2"/>
+    <circle cx="305" cy="396" r="2.5"/>
+    <circle cx="207" cy="396" r="2.5"/>
+    <circle cx="256" cy="400" r="2.5"/>
+  </g>
+  
+  <!-- Layer 2: radius ~159 -->
+  <g fill="#40E0D0" opacity="0.8" filter="url(#glow)">
+    <circle cx="256" cy="72" r="2"/>
+    <circle cx="320" cy="85" r="1.8"/>
+    <circle cx="192" cy="85" r="1.8"/>
+    <circle cx="370" cy="115" r="1.8"/>
+    <circle cx="142" cy="115" r="1.8"/>
+    <circle cx="400" cy="160" r="2"/>
+    <circle cx="112" cy="160" r="2"/>
+    <circle cx="405" cy="220" r="1.8"/>
+    <circle cx="107" cy="220" r="1.8"/>
+    <circle cx="398" cy="280" r="1.8"/>
+    <circle cx="114" cy="280" r="1.8"/>
+    <circle cx="375" cy="330" r="1.8"/>
+    <circle cx="137" cy="330" r="1.8"/>
+    <circle cx="338" cy="365" r="2"/>
+    <circle cx="174" cy="365" r="2"/>
+    <circle cx="290" cy="385" r="2"/>
+    <circle cx="222" cy="385" r="2"/>
+    <circle cx="256" cy="388" r="2"/>
+  </g>
+  
+  <!-- Outer aura stars - scattered beyond ring -->
+  <g fill="#40E0D0" opacity="0.5">
+    <circle cx="60" cy="180" r="1.5"/>
+    <circle cx="75" cy="130" r="1.2"/>
+    <circle cx="110" cy="80" r="1.5"/>
+    <circle cx="180" cy="45" r="1.3"/>
+    <circle cx="256" cy="35" r="1.5"/>
+    <circle cx="332" cy="45" r="1.3"/>
+    <circle cx="402" cy="80" r="1.5"/>
+    <circle cx="437" cy="130" r="1.2"/>
+    <circle cx="452" cy="180" r="1.5"/>
+    <circle cx="458" cy="240" r="1.3"/>
+    <circle cx="450" cy="310" r="1.5"/>
+    <circle cx="428" cy="370" r="1.2"/>
+    <circle cx="385" cy="415" r="1.5"/>
+    <circle cx="320" cy="435" r="1.3"/>
+    <circle cx="256" cy="440" r="1.5"/>
+    <circle cx="192" cy="435" r="1.3"/>
+    <circle cx="127" cy="415" r="1.5"/>
+    <circle cx="84" cy="370" r="1.2"/>
+    <circle cx="62" cy="310" r="1.5"/>
+    <circle cx="54" cy="240" r="1.3"/>
+  </g>
+  
+  <!-- Eyes - positioned at eyeY=203, spacing=68 from center -->
+  <!-- Left eye at x=188, Right eye at x=324 -->
+  <g>
+    <!-- Left eye glow -->
+    <circle cx="188" cy="203" r="33" fill="url(#eyeGlow)"/>
+    <!-- Left eye core -->
+    <circle cx="188" cy="203" r="7" fill="#ffffff"/>
+    
+    <!-- Right eye glow -->
+    <circle cx="324" cy="203" r="33" fill="url(#eyeGlow)"/>
+    <!-- Right eye core -->
+    <circle cx="324" cy="203" r="7" fill="#ffffff"/>
+  </g>
+  
+  <!-- Mouth - U-shaped smile at mouthY=266 -->
+  <!-- Formula: x = 256 + t * 32 * 2, y = 266 + (1 - (t*2)^2) * 21.5 -->
+  <!-- t from -0.5 to 0.5 in 10 steps -->
+  <!-- Points: (-0.5), (-0.39), (-0.28), (-0.17), (-0.06), (0.06), (0.17), (0.28), (0.39), (0.5) -->
+  
+  <!-- Mouth curve path -->
+  <path d="M 224,266 
+           Q 230,278 240,284 
+           Q 248,287 256,287.5 
+           Q 264,287 272,284 
+           Q 282,278 288,266" 
+        stroke="#40E0D0" stroke-width="2" fill="none" 
+        stroke-linecap="round" opacity="0.7" filter="url(#glow)"/>
+  
+  <!-- Mouth star nodes -->
+  <g fill="#40E0D0" filter="url(#glow)">
+    <circle cx="224" cy="266" r="2"/>
+    <circle cx="232" cy="274" r="1.8"/>
+    <circle cx="242" cy="281" r="1.8"/>
+    <circle cx="253" cy="285" r="2"/>
+    <circle cx="259" cy="285" r="2"/>
+    <circle cx="270" cy="281" r="1.8"/>
+    <circle cx="280" cy="274" r="1.8"/>
+    <circle cx="288" cy="266" r="2"/>
+  </g>
+  
+  <!-- Animated connection lines between ring stars (simplified static version) -->
+  <g stroke="#40E0D0" stroke-width="1" opacity="0.5" fill="none" stroke-linecap="round">
+    <!-- Top connections -->
+    <line x1="256" y1="51" x2="300" y2="55"/>
+    <line x1="256" y1="51" x2="212" y2="55"/>
+    <line x1="300" y1="55" x2="343" y2="68"/>
+    <line x1="212" y1="55" x2="169" y2="68"/>
+    <line x1="343" y1="68" x2="380" y2="92"/>
+    <line x1="169" y1="68" x2="132" y2="92"/>
+    
+    <!-- Side connections -->
+    <line x1="380" y1="92" x2="408" y2="125"/>
+    <line x1="132" y1="92" x2="104" y2="125"/>
+    <line x1="408" y1="125" x2="425" y2="165"/>
+    <line x1="104" y1="125" x2="87" y2="165"/>
+    <line x1="425" y1="165" x2="432" y2="210"/>
+    <line x1="87" y1="165" x2="80" y2="210"/>
+    
+    <!-- Cross-layer connections -->
+    <line x1="256" y1="62" x2="310" y2="70"/>
+    <line x1="256" y1="62" x2="202" y2="70"/>
+    <line x1="358" y1="95" x2="395" y2="135"/>
+    <line x1="154" y1="95" x2="117" y2="135"/>
+  </g>
+</svg>
