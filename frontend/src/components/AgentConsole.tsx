@@ -17,13 +17,13 @@ interface LogsResponse {
   count: number;
 }
 
-interface NovaConsoleProps {
+interface AgentConsoleProps {
   status: "online" | "idle" | "sleeping" | "offline";
   lastActive: string | null;
   completionMessage: string | null;
 }
 
-const NovaConsole: React.FC<NovaConsoleProps> = ({
+const AgentConsole: React.FC<AgentConsoleProps> = ({
   status,
   lastActive,
   completionMessage,
@@ -102,16 +102,16 @@ const NovaConsole: React.FC<NovaConsoleProps> = ({
     }
   };
 
-  const handleWakeNova = async () => {
+  const handleWakeAgent = async () => {
     if (waking) return;
 
     setWaking(true);
     try {
-      await apiPost("/api/nova/wake", {});
-      notify("success", "Nova woken up!");
+      await apiPost("/api/agent/wake", {});
+      notify("success", "Agent woken up!");
     } catch (error) {
-      console.error("Failed to wake Nova:", error);
-      notify("error", "Failed to wake Nova. Please try again.");
+      console.error("Failed to wake agent:", error);
+      notify("error", "Failed to wake agent. Please try again.");
     } finally {
       setWaking(false);
     }
@@ -164,12 +164,12 @@ const NovaConsole: React.FC<NovaConsoleProps> = ({
   };
 
   return (
-    <div className="nova-console">
+    <div className="agent-console">
       {/* Header Bar */}
       <div className="console-header">
         <div className="console-title">
-          <span className="title-icon">✨</span>
-          <span className="title-text">nova.log</span>
+          <span className="title-icon">&gt;</span>
+          <span className="title-text">agent.log</span>
         </div>
         <div className="console-status">
           {lastActive && (
@@ -185,9 +185,9 @@ const NovaConsole: React.FC<NovaConsoleProps> = ({
           {/* Wake/heartbeat button - always visible */}
           <button
             className={`wake-button-mini ${waking ? "waking" : ""}`}
-            onClick={handleWakeNova}
+            onClick={handleWakeAgent}
             disabled={waking}
-            title="Wake Nova"
+            title="Wake Agent"
           >
             <div className="defibrillator-icon">
               <svg
@@ -276,7 +276,7 @@ const NovaConsole: React.FC<NovaConsoleProps> = ({
       </div>
 
       <style>{`
-        .nova-console {
+        .agent-console {
           width: 100%;
           background: #0d0d0d;
           border: 1px solid #333;
@@ -712,4 +712,4 @@ const NovaConsole: React.FC<NovaConsoleProps> = ({
   );
 };
 
-export default NovaConsole;
+export default AgentConsole;

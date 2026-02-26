@@ -16,7 +16,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 	"go.uber.org/zap"
 
-	"nova-dashboard/models"
+	"agent-dashboard/models"
 )
 
 type CardHandler struct {
@@ -180,7 +180,7 @@ func (h *CardHandler) UpdateCard(w http.ResponseWriter, r *http.Request) {
 		updates["column"] = normalizeColumn(col)
 	}
 
-	// Auto-clear flag when Victor approves a card
+	// Auto-clear flag when owner approves a card
 	if approved, ok := updates["approved"].(bool); ok && approved {
 		updates["flagged"] = false
 	}
@@ -243,8 +243,8 @@ func (h *CardHandler) AddComment(w http.ResponseWriter, r *http.Request) {
 	// Build update operation
 	setFields := bson.M{"updated_at": time.Now().UTC()}
 
-	// Auto-clear flag when Victor adds a comment
-	if comment.Author == "Victor" {
+	// Auto-clear flag when owner adds a comment
+	if comment.Author == "Owner" {
 		setFields["flagged"] = false
 	}
 
@@ -383,7 +383,7 @@ func (h *CardHandler) UploadAttachment(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create attachment directory
-	attachmentDir := filepath.Join("/home/ubuntu/nova-dashboard/attachments", id.Hex())
+	attachmentDir := filepath.Join("/home/ubuntu/agent-dashboard/attachments", id.Hex())
 	if err := os.MkdirAll(attachmentDir, 0755); err != nil {
 		h.logger.Error("failed to create attachment directory", zap.Error(err))
 		writeError(w, http.StatusInternalServerError, "failed to create directory")
@@ -421,7 +421,7 @@ func (h *CardHandler) UploadAttachment(w http.ResponseWriter, r *http.Request) {
 		Size:        header.Size,
 		ContentType: header.Header.Get("Content-Type"),
 		UploadedAt:  time.Now().UTC(),
-		UploadedBy:  "Victor", // Auto-set for now
+		UploadedBy:  "Owner", // Auto-set for now
 	}
 
 	var result *mongo.UpdateResult
@@ -500,7 +500,7 @@ func (h *CardHandler) DownloadAttachment(w http.ResponseWriter, r *http.Request)
 	}
 
 	// Serve file
-	filePath := filepath.Join("/home/ubuntu/nova-dashboard/attachments", id.Hex(), filename)
+	filePath := filepath.Join("/home/ubuntu/agent-dashboard/attachments", id.Hex(), filename)
 
 	// Check if file exists
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
@@ -544,7 +544,7 @@ func (h *CardHandler) DeleteAttachment(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Delete file from disk
-	filePath := filepath.Join("/home/ubuntu/nova-dashboard/attachments", id.Hex(), filename)
+	filePath := filepath.Join("/home/ubuntu/agent-dashboard/attachments", id.Hex(), filename)
 	if err := os.Remove(filePath); err != nil && !os.IsNotExist(err) {
 		h.logger.Error("failed to delete file", zap.Error(err))
 		// Don't return error - database was updated successfully

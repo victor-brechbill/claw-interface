@@ -3,7 +3,7 @@
 /**
  * Tommy Collect Market — Fetch market-specific posts from X API
  * 
- * Fetches watchlist from Nova Dashboard, searches for each ticker,
+ * Fetches watchlist from the dashboard, searches for each ticker,
  * fetches today's DSP pick + social image path.
  * Writes JSON to /tmp/tommy-market-collected.json
  */
@@ -62,7 +62,7 @@ async function collect() {
     }
     console.error(`📋 Runtime config loaded: maxSearches=${config.MARKET_SESSION.MAX_SEARCHES}, maxResults=${config.MARKET_SESSION.MAX_SEARCH_RESULTS}`);
 
-    // Fetch watchlist from Nova Dashboard
+    // Fetch watchlist from the dashboard
     console.error('📋 Fetching watchlist from dashboard...');
     let tickers = [];
     const watchlistData = await fetchJSON('http://localhost:3080/api/stocks/watchlist');

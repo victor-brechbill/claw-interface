@@ -8,7 +8,7 @@ interface StatusReport {
   timestamp: string;
 }
 
-const NovaTerminal: React.FC = () => {
+const AgentTerminal: React.FC = () => {
   const [statuses, setStatuses] = useState<StatusReport[]>([]);
   const [loading, setLoading] = useState(true);
   const terminalBodyRef = useRef<HTMLDivElement>(null);
@@ -17,7 +17,7 @@ const NovaTerminal: React.FC = () => {
     const fetchStatuses = async () => {
       try {
         const data = await apiGet<StatusReport[]>(
-          "/api/nova/status/recent?limit=50&agentId=nova",
+          "/api/agent/status/recent?limit=50&agentId=main",
         );
         if (data && data.length > 0) {
           setStatuses(data);
@@ -25,7 +25,7 @@ const NovaTerminal: React.FC = () => {
           setStatuses([]);
         }
       } catch (err) {
-        console.error("Failed to fetch nova status:", err);
+        console.error("Failed to fetch agent status:", err);
       } finally {
         setLoading(false);
       }
@@ -57,10 +57,10 @@ const NovaTerminal: React.FC = () => {
   };
 
   return (
-    <div className="nova-terminal">
+    <div className="agent-terminal">
       <div className="terminal-header">
         <span className="terminal-title">
-          <span className="terminal-icon">▸</span> nova.log
+          <span className="terminal-icon">▸</span> agent.log
         </span>
         {statuses.length > 0 && (
           <span className="terminal-timestamp">
@@ -86,7 +86,7 @@ const NovaTerminal: React.FC = () => {
         )}
       </div>
       <style>{`
-        .nova-terminal {
+        .agent-terminal {
           margin-top: 1rem;
           background: #0d0d0d;
           border: 1px solid #333;
@@ -196,7 +196,7 @@ const NovaTerminal: React.FC = () => {
           opacity: 0.3;
         }
 
-        .nova-terminal {
+        .agent-terminal {
           position: relative;
         }
 
@@ -224,4 +224,4 @@ const NovaTerminal: React.FC = () => {
   );
 };
 
-export default NovaTerminal;
+export default AgentTerminal;

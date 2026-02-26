@@ -119,6 +119,6 @@ Queries verified after fix:
 - **Issue:** NOVA-361
 - **PR:** (pending)
 - **Root cause identified by:** Developer agent dev-9e7c0b49 (2026-02-22)
-- **Fix implemented by:** Nova (2026-02-22)
+- **Fix implemented by:** the agent (2026-02-22)
 - **RFC 3986:** https://datatracker.ietf.org/doc/html/rfc3986#section-2.1
 - **OAuth 1.0a spec:** https://datatracker.ietf.org/doc/html/rfc5849

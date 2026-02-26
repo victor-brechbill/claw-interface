@@ -26,8 +26,8 @@ export default function Navigation() {
     <nav className="app-nav">
       <div className="app-title">
         <h1>
-          <span className="icon">✨</span>
-          Nova
+          <span className="icon">&gt;</span>
+          Agent
         </h1>
       </div>
 

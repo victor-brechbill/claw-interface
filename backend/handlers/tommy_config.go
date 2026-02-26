@@ -257,8 +257,8 @@ func defaultTommyConfig() map[string]interface{} {
 		"budget": map[string]interface{}{
 			"monthlyXBudget": 10.00,
 		},
-		"victorProfile": map[string]interface{}{
-			"username":        "victor__vector",
+		"ownerProfile": map[string]interface{}{
+			"username":        "your_handle",
 			"maxLikesToScan":  20,
 			"maxTweetsToScan": 10,
 		},

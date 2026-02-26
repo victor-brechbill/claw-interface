@@ -18,7 +18,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 	"go.uber.org/zap"
 
-	"nova-dashboard/models"
+	"agent-dashboard/models"
 )
 
 type SystemHandler struct {
@@ -164,7 +164,7 @@ func (h *SystemHandler) oauthRefreshDir() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("cannot determine home directory: %w", err)
 	}
-	dir := filepath.Join(home, ".nova", "oauth-refresh")
+	dir := filepath.Join(home, ".agent-dashboard", "oauth-refresh")
 	if err := os.MkdirAll(dir, 0700); err != nil {
 		return "", fmt.Errorf("cannot create oauth refresh directory: %w", err)
 	}
@@ -192,12 +192,12 @@ func extractSubagentStatus(label string) string {
 		return ""
 	}
 
-	// Extract ticket ID from label (e.g., "NOVA-011-approval-workflow" -> "NOVA-011")
+	// Extract ticket ID from label (e.g., "TASK-011-approval-workflow" -> "TASK-011")
 	parts := strings.SplitN(label, "-", 3)
 	if len(parts) < 2 {
 		return ""
 	}
-	ticketID := parts[0] + "-" + parts[1] // e.g., "NOVA-011"
+	ticketID := parts[0] + "-" + parts[1] // e.g., "TASK-011"
 
 	// First try the live status file (simple one-liner, updated frequently)
 	liveFile := fmt.Sprintf("/home/ubuntu/clawd/coding/status/%s-live.txt", ticketID)
@@ -298,7 +298,7 @@ func (h *SystemHandler) RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("POST /api/system/config-rollforward", h.ConfigRollForward)
 
 	// Context Manager endpoint
-	mux.HandleFunc("GET /api/nova/context", h.ContextInfo)
+	mux.HandleFunc("GET /api/agent/context", h.ContextInfo)
 
 	// OAuth refresh endpoints
 	mux.HandleFunc("POST /api/system/oauth-refresh/start", h.OAuthRefreshStart)
@@ -892,7 +892,7 @@ func (h *SystemHandler) cleanupOldReports() {
 	}
 }
 
-// ContextInfo returns information about Nova's static context files
+// ContextInfo returns information about the agent's static context files
 func (h *SystemHandler) ContextInfo(w http.ResponseWriter, r *http.Request) {
 	contextFiles := []string{
 		"AGENTS.md",
@@ -1585,8 +1585,8 @@ func (h *SystemHandler) DomainSSL(w http.ResponseWriter, r *http.Request) {
 		Timestamp: time.Now().UTC(),
 	}
 
-	// Default domain for nova dashboard
-	domain := "nova.victorbrechbill.com"
+	// Default domain for agent dashboard
+	domain := "YOUR_DOMAIN"
 	response.Domain = domain
 
 	// Create context with timeout for SSL/domain checks
@@ -1647,7 +1647,7 @@ func (h *SystemHandler) DomainSSL(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check Cloudflare Tunnel status
-	cmd = exec.CommandContext(ctx, "cloudflared", "tunnel", "info", "nova-dashboard", "--output", "json")
+	cmd = exec.CommandContext(ctx, "cloudflared", "tunnel", "info", "agent-dashboard", "--output", "json")
 	if out, err := cmd.Output(); err == nil {
 		var tunnelInfo struct {
 			Connections []struct{} `json:"connections"`
@@ -1674,7 +1674,7 @@ func (h *SystemHandler) DomainSSL(w http.ResponseWriter, r *http.Request) {
 			if count != "0" {
 				response.TunnelStatus = "✓ Running"
 				// Parse connection count from tunnel list
-				listCmd := exec.CommandContext(ctx, "bash", "-c", "cloudflared tunnel list 2>/dev/null | grep nova-dashboard | grep -oP '\\d+x\\w+' | wc -l")
+				listCmd := exec.CommandContext(ctx, "bash", "-c", "cloudflared tunnel list 2>/dev/null | grep agent-dashboard | grep -oP '\\d+x\\w+' | wc -l")
 				if listOut, _ := listCmd.Output(); len(listOut) > 0 {
 					if n, err := strconv.Atoi(strings.TrimSpace(string(listOut))); err == nil && n > 0 {
 						response.TunnelConnections = n * 2 // Each entry is 2 connections

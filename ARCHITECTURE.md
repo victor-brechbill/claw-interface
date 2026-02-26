@@ -1,22 +1,22 @@
-# Nova Dashboard — Architecture & Operations
+# Agent Dashboard — Architecture & Operations
 
-_Last updated: 2026-02-12 by Nova_
+_Last updated: 2026-02-12 by Agent_
 
 ---
 
 ## Overview
 
-The Nova Dashboard is Victor's command center for managing AI agents, monitoring systems, and tracking projects. It runs on an EC2 instance and serves as the hub for multiple interconnected services.
+The Agent Dashboard is the owner's command center for managing AI agents, monitoring systems, and tracking projects. It runs on an EC2 instance and serves as the hub for multiple interconnected services.
 
 ## System Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                    Nova EC2 Instance                     │
+│                    Agent EC2 Instance                    │
 │                  (Ubuntu, us-east-2)                     │
 │                                                          │
 │  ┌──────────────┐  ┌──────────────┐  ┌───────────────┐  │
-│  │  Nova Dashboard│  │   OpenClaw   │  │  NS Alpha     │  │
+│  │ Agent Dashboard│  │   OpenClaw   │  │  NS Alpha     │  │
 │  │  (Go + React) │  │   Gateway    │  │  (Go + React) │  │
 │  │  :3080        │  │   (Node.js)  │  │  :5174/:8081  │  │
 │  └──────┬───────┘  └──────┬───────┘  └──────┬────────┘  │
@@ -29,7 +29,7 @@ The Nova Dashboard is Victor's command center for managing AI agents, monitoring
 │                                                          │
 │  ┌──────────────────────────────────────────────────────┐│
 │  │  Cloudflare Tunnel                                   ││
-│  │  nova.victorbrechbill.com → :3080                    ││
+│  │  YOUR_DOMAIN → :3080                                 ││
 │  │  alpha.neighborhoodshare.org → :5174/:8081           ││
 │  └──────────────────────────────────────────────────────┘│
 └─────────────────────────────────────────────────────────┘
@@ -55,7 +55,7 @@ The Nova Dashboard is Victor's command center for managing AI agents, monitoring
 
 | Agent              | ID               | Role                                  | Model             | Skill         |
 | ------------------ | ---------------- | ------------------------------------- | ----------------- | ------------- |
-| **Nova**           | `main`           | Orchestrator, Victor's assistant      | Claude Opus 4     | `coding`      |
+| **Agent**          | `main`           | Orchestrator, the owner's assistant   | Claude Opus 4     | `coding`      |
 | **Developer**      | `developer`      | Implements code via Claude Code       | Claude Opus 4     | `vibecoding`  |
 | **Code Reviewer**  | `code-reviewer`  | Reviews PRs for quality               | Claude Opus 4     | `code-review` |
 | **Tommy**          | `tommy`          | Social media agent (@TommyPickles999) | Claude Opus 4     | Custom        |
@@ -65,7 +65,7 @@ The Nova Dashboard is Victor's command center for managing AI agents, monitoring
 ### Agent Workflow
 
 ```
-Victor (Telegram) ↔ Nova (orchestrator)
+Owner (Telegram) ↔ Agent (orchestrator)
                         ├── Developer agent (spawned per task)
                         ├── Code Reviewer agent (spawned per PR)
                         ├── Tommy (scheduled social sessions)
@@ -82,18 +82,18 @@ Victor (Telegram) ↔ Nova (orchestrator)
 
 ## Projects
 
-### Nova Dashboard
+### Agent Dashboard
 
-- **Repo:** `victor-brechbill/nova` (GitHub)
+- **Repo:** `YOUR_ORG/agent-dashboard` (GitHub)
 - **Stack:** Go backend + React/TypeScript frontend + MongoDB
 - **Local path:** `~/clawd/vault/dev/repos/dashboard/`
 - **Deploy:** `cd ~/clawd/vault/dev/repos/dashboard && ./deploy.sh`
-- **URL:** nova.victorbrechbill.com (Cloudflare Access protected)
-- **Database:** MongoDB container `nova-mongo-prod` on port 27017
+- **URL:** YOUR_DOMAIN (Cloudflare Access protected)
+- **Database:** MongoDB container `agent-mongo-prod` on port 27017
 
 ### NeighborhoodShare
 
-- **Repo:** `victor-brechbill/neighborhood-share` (GitHub)
+- **Repo:** `YOUR_ORG/neighborhood-share` (GitHub)
 - **Stack:** Go backend + React frontend + MongoDB + Ory Kratos (auth)
 - **Local path:** `~/clawd/vault/dev/repos/neighborhood-share/`
 - **Alpha URL:** alpha.neighborhoodshare.org (Cloudflare Access protected)
@@ -102,17 +102,17 @@ Victor (Telegram) ↔ Nova (orchestrator)
 
 ### DailyStockPick
 
-- **Repo:** `victor-brechbill/dailystockpick` (GitHub, private)
+- **Repo:** `YOUR_ORG/dailystockpick` (GitHub, private)
 - **Stack:** Node.js API + scheduler + MongoDB
 - **Production server:** 18.119.213.209 (separate EC2)
-- **SSH:** `ssh -i ~/.ssh/nova-dsp-prod ubuntu@18.119.213.209`
+- **SSH:** `ssh -i ~/.ssh/agent-dsp-prod ubuntu@18.119.213.209`
 - **Domain:** dailystockpick.ai
 
-## Docker Containers (Nova EC2)
+## Docker Containers (Agent EC2)
 
 | Container           | Image       | Port      | Purpose                |
 | ------------------- | ----------- | --------- | ---------------------- |
-| `nova-mongo-prod`   | mongo:7.0   | 27017     | Dashboard + Tommy data |
+| `agent-mongo-prod`  | mongo:7.0   | 27017     | Dashboard + Tommy data |
 | `ns-alpha-frontend` | custom      | 5174      | NS Alpha frontend      |
 | `ns-alpha-backend`  | custom      | 8081      | NS Alpha backend       |
 | `ns-alpha-kratos`   | ory/kratos  | 4445/4446 | NS Alpha auth          |
@@ -124,15 +124,15 @@ Victor (Telegram) ↔ Nova (orchestrator)
 
 ```
 Layer 1: Local backups (on each server)
-Layer 2: Cross-server sync (DSP → Nova EC2)
+Layer 2: Cross-server sync (DSP → Agent EC2)
 Layer 3: Google Drive (off-site, cloud)
 ```
 
-### Nova EC2 Backup (Daily, 4:00 AM ET)
+### Agent EC2 Backup (Daily, 4:00 AM ET)
 
 - **Cron job:** "Daily Google Drive Backup"
 - **Script:** `~/clawd/scripts/backup-to-gdrive.sh`
-- **Tool:** `rclone` with Google Drive remote (`gdrive:Nova-Backup/`)
+- **Tool:** `rclone` with Google Drive remote (`gdrive:Agent-Backup/`)
 - **What's backed up:**
   - ✅ `~/clawd/` workspace (SOUL.md, MEMORY.md, skills, scripts, PRDs, daily logs)
   - ✅ `~/.openclaw/` config (agent configs, cron jobs, credentials)
@@ -155,38 +155,38 @@ Layer 3: Google Drive (off-site, cloud)
 - **Retention:** 7 days on prod server
 - **Size:** ~852KB per backup
 
-**Step 2 — Nova EC2 pulls backup (3:45 AM ET daily)**
+**Step 2 — Agent EC2 pulls backup (3:45 AM ET daily)**
 
 - **Cron job:** "DSP Backup Sync" (OpenClaw cron)
 - **Script:** `~/clawd/scripts/dsp-backup-sync.sh`
 - **Process:** SSH into prod → trigger mongodump → SCP the file back
 - **Local storage:** `~/dsp-backups/`
-- **Retention:** 30 days on Nova EC2
+- **Retention:** 30 days on Agent EC2
 
 **Step 3 — Google Drive sync (4:00 AM ET daily)**
 
 - Part of the main Google Drive backup job
-- Syncs `~/dsp-backups/` → `gdrive:Nova-Backup/dsp-backups/`
+- Syncs `~/dsp-backups/` → `gdrive:Agent-Backup/dsp-backups/`
 
-### Nova Dashboard MongoDB
+### Agent Dashboard MongoDB
 
-- **Currently:** No separate mongodump (data is in `nova-mongo-prod` Docker volume)
+- **Currently:** No separate mongodump (data is in `agent-mongo-prod` Docker volume)
 - **Protected by:** Google Drive backup of config + workspace (the data that matters is kanban cards, tommy finds, briefs — all in MongoDB)
-- **TODO:** Add `mongodump` for `nova_dashboard_prod` database to the backup pipeline
+- **TODO:** Add `mongodump` for `agent_dashboard_prod` database to the backup pipeline
 
 ### Restore Procedures
 
-**Nova EC2 (full recovery ~15-20 min):**
+**Agent EC2 (full recovery ~15-20 min):**
 
 1. Launch new Ubuntu EC2
 2. Install Node.js 22, OpenClaw, rclone, Docker
-3. `rclone copy gdrive:Nova-Backup/clawd ~/clawd`
-4. `rclone copy gdrive:Nova-Backup/openclaw-config ~/.openclaw`
+3. `rclone copy gdrive:Agent-Backup/clawd ~/clawd`
+4. `rclone copy gdrive:Agent-Backup/openclaw-config ~/.openclaw`
 5. Clone repos from GitHub
 6. Re-enter API keys (not backed up for security)
 7. `openclaw gateway start`
 8. `cd ~/clawd/vault/dev/repos/dashboard && ./deploy.sh`
-9. Full guide: `gdrive:Nova-Backup/RECOVERY.md`
+9. Full guide: `gdrive:Agent-Backup/RECOVERY.md`
 
 **DailyStockPick MongoDB (restore from backup):**
 
@@ -204,12 +204,12 @@ All times in Eastern (America/Detroit). Jobs run as OpenClaw cron tasks — eith
 
 | Schedule | Job                      | Type     | Description                                                            |
 | -------- | ------------------------ | -------- | ---------------------------------------------------------------------- |
-| Every 6h | **Nova Heartbeat**       | Main     | Checks kanban board, monitors running agents, picks up new work        |
+| Every 6h | **Agent Heartbeat**      | Main     | Checks kanban board, monitors running agents, picks up new work        |
 | Every 6h | **Claude Token Refresh** | Main     | Refreshes Claude Code OAuth token (~8h expiry) for developer agents    |
 | 3:00 AM  | **Self-Improvement**     | Isolated | Reviews all projects, explores OpenClaw docs, writes suggestions       |
 | 3:45 AM  | **DSP Backup Sync**      | Isolated | Pulls MongoDB backup from DailyStockPick production server via SCP     |
 | 5:00 AM  | **Daily Maintenance**    | Isolated | OS updates, storage/memory/security checks, email, Google Drive backup |
-| 9:00 AM  | **Morning Brief**        | Isolated | Weather, headlines, project status, improvement suggestions for Victor |
+| 9:00 AM  | **Morning Brief**        | Isolated | Weather, headlines, project status, improvement suggestions for Owner  |
 
 ### NeighborhoodShare
 
@@ -233,7 +233,7 @@ All times in Eastern (America/Detroit). Jobs run as OpenClaw cron tasks — eith
 
 ### Job Types
 
-- **Main (systemEvent):** Injects a message into Nova's active session. Near-zero cost — no new session created. Used for quick tasks like token refresh and heartbeat checks.
+- **Main (systemEvent):** Injects a message into the Agent's active session. Near-zero cost — no new session created. Used for quick tasks like token refresh and heartbeat checks.
 - **Isolated (agentTurn):** Spawns a fresh isolated session with full agent context. Used for longer tasks that need their own workspace. Results can be announced back to Telegram.
 
 ### Daily Maintenance Includes
@@ -268,10 +268,10 @@ The Sunday 9:00 AM cleanup job handles:
 - Agent sessions are isolated — sub-agents can't access vault secrets
 - Daily security audit in System Maintenance job
 
-## Key Paths (Nova EC2)
+## Key Paths (Agent EC2)
 
 ```
-~/clawd/                              # Nova workspace
+~/clawd/                              # Agent workspace
 ├── AGENTS.md, SOUL.md, etc.          # Core identity files
 ├── memory/                           # Daily logs
 ├── skills/                           # Custom agent skills
@@ -282,7 +282,7 @@ The Sunday 9:00 AM cleanup job handles:
 │   ├── dsp-backup-sync.sh            # DSP backup pull
 │   └── gmail/                        # Email scripts
 └── vault/dev/repos/                  # Code repositories
-    ├── dashboard/                    # Nova Dashboard
+    ├── dashboard/                    # Agent Dashboard
     ├── neighborhood-share/           # NeighborhoodShare
     └── dailystockpick/               # DSP (dev copy)
 

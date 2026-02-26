@@ -8,8 +8,8 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 
-	"nova-dashboard/db"
-	"nova-dashboard/models"
+	"agent-dashboard/db"
+	"agent-dashboard/models"
 )
 
 // AddCardNumbers assigns sequential numbers to existing cards that don't have them

@@ -7,7 +7,7 @@
  * The Tommy agent scores them directly, then feeds scores to engage.js.
  * 
  * Usage: node src/collect.js [--type explore|market]
- * Output: JSON object with { posts: [...], session: {...}, victorActivity: {...} }
+ * Output: JSON object with { posts: [...], session: {...}, ownerActivity: {...} }
  */
 
 const InterestMatcher = require('./interest-matcher');
@@ -23,7 +23,7 @@ async function collect() {
   
   const collectedPosts = [];
   const userIndex = {};
-  let victorActivity = { topics: [], authors: [], tickers: [] };
+  let ownerActivity = { topics: [], authors: [], tickers: [] };
   let exclusionSet = new Set();
 
   const { xClient, database, session, runtimeConfig } = await initSession({ sessionType });
@@ -36,35 +36,35 @@ async function collect() {
       if (sessionConfig.maxSearchResults != null) config.SESSION_LIMITS.MAX_SEARCH_RESULTS = sessionConfig.maxSearchResults;
       if (sessionConfig.maxTimelinePosts != null) config.SESSION_LIMITS.MAX_TIMELINE_POSTS = sessionConfig.maxTimelinePosts;
     }
-    if (runtimeConfig?.victorProfile) {
-      if (runtimeConfig.victorProfile.maxLikesToScan != null) config.VICTOR_PROFILE.MAX_LIKES_TO_SCAN = runtimeConfig.victorProfile.maxLikesToScan;
-      if (runtimeConfig.victorProfile.maxTweetsToScan != null) config.VICTOR_PROFILE.MAX_TWEETS_TO_SCAN = runtimeConfig.victorProfile.maxTweetsToScan;
+    if (runtimeConfig?.ownerProfile) {
+      if (runtimeConfig.ownerProfile.maxLikesToScan != null) config.OWNER_PROFILE.MAX_LIKES_TO_SCAN = runtimeConfig.ownerProfile.maxLikesToScan;
+      if (runtimeConfig.ownerProfile.maxTweetsToScan != null) config.OWNER_PROFILE.MAX_TWEETS_TO_SCAN = runtimeConfig.ownerProfile.maxTweetsToScan;
     }
     console.error(`📋 Runtime config loaded: maxSearches=${config.SESSION_LIMITS.MAX_SEARCHES}, maxTimeline=${config.SESSION_LIMITS.MAX_TIMELINE_POSTS}`);
 
-    // Phase 0: Victor activity scan
-    console.error('📡 Phase 0: Victor activity scan...');
+    // Phase 0: Owner activity scan
+    console.error('📡 Phase 0: Owner activity scan...');
     try {
-      const victorResp = await xClient.getUserByUsername(config.VICTOR_PROFILE.USERNAME);
-      const victorUser = victorResp?.data;
-      if (victorUser && victorUser.id) {
-        // Get Victor's recent likes for exclusion
-        const likesResp = await xClient.getUserLikes(victorUser.id, config.VICTOR_PROFILE.MAX_LIKES_TO_SCAN);
+      const ownerResp = await xClient.getUserByUsername(config.OWNER_PROFILE.USERNAME);
+      const ownerUser = ownerResp?.data;
+      if (ownerUser && ownerUser.id) {
+        // Get owner's recent likes for exclusion
+        const likesResp = await xClient.getUserLikes(ownerUser.id, config.OWNER_PROFILE.MAX_LIKES_TO_SCAN);
         for (const post of (likesResp.data || [])) {
           exclusionSet.add(post.id);
         }
-        
-        // Get Victor's recent tweets for topic signals
-        const tweetsResp = await xClient.getUserTweets(victorUser.id, config.VICTOR_PROFILE.MAX_TWEETS_TO_SCAN);
+
+        // Get owner's recent tweets for topic signals
+        const tweetsResp = await xClient.getUserTweets(ownerUser.id, config.OWNER_PROFILE.MAX_TWEETS_TO_SCAN);
         const signals = interestMatcher.extractSignals(tweetsResp.data || []);
-        victorActivity.topics = signals.topics || [];
-        victorActivity.tickers = signals.tickers || [];
-        victorActivity.authors = signals.authors || [];
-        
-        console.error(`✅ Victor scan: ${exclusionSet.size} exclusions, ${victorActivity.topics.length} topics`);
+        ownerActivity.topics = signals.topics || [];
+        ownerActivity.tickers = signals.tickers || [];
+        ownerActivity.authors = signals.authors || [];
+
+        console.error(`✅ Owner scan: ${exclusionSet.size} exclusions, ${ownerActivity.topics.length} topics`);
       }
     } catch (err) {
-      console.error(`⚠️ Victor scan failed: ${err.message}`);
+      console.error(`⚠️ Owner scan failed: ${err.message}`);
     }
 
     // Phase 1: Timeline
@@ -155,7 +155,7 @@ async function collect() {
         },
         createdAt: p.created_at,
       })),
-      victorActivity,
+      ownerActivity,
     };
 
     // Write output to file (stdout is polluted by library console.log calls)

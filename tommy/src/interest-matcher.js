@@ -10,7 +10,7 @@ const config = require('./config');
 class InterestMatcher {
   constructor() {
     this.interests = null;
-    this.interestsPath = config.VICTOR_INTERESTS_PATH;
+    this.interestsPath = config.OWNER_INTERESTS_PATH;
     this.dynamicInterests = { topics: [], authors: [], tickers: [] };
   }
 
@@ -41,7 +41,7 @@ class InterestMatcher {
     return { tickers };
   }
 
-  // Extract dynamic interest signals from Victor's X activity
+  // Extract dynamic interest signals from owner's X activity
   extractSignals(tweets) {
     const topics = new Set();
     const authors = new Set();
@@ -67,7 +67,7 @@ class InterestMatcher {
   }
 
   /**
-   * Extract Victor's liked post IDs for the exclusion set.
+   * Extract owner's liked post IDs for the exclusion set.
    */
   extractExclusionSet(likes, tweets) {
     const exclusionSet = new Set();

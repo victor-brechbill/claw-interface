@@ -149,8 +149,8 @@ export default function CreateCardForm({ onCreated, onCancel }: Props) {
                 onChange={(e) => updateFormData("assignee", e.target.value)}
               >
                 <option value="">Unassigned</option>
-                <option value="victor">Victor</option>
-                <option value="nova">Nova</option>
+                <option value="owner">Owner</option>
+                <option value="agent">Agent</option>
               </select>
             </label>
             <label>

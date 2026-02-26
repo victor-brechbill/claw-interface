@@ -104,7 +104,7 @@ export default function CardModal({ card, onClose, onUpdated }: Props) {
 
       // Only include approval fields when approved (avoid empty strings for time fields)
       if (formData.approved) {
-        updateData.approvedBy = formData.approvedBy || "Victor";
+        updateData.approvedBy = formData.approvedBy || "Owner";
         updateData.approvedAt = formData.approvedAt || new Date().toISOString();
       }
 
@@ -120,7 +120,7 @@ export default function CardModal({ card, onClose, onUpdated }: Props) {
 
   async function handleApprovalToggle() {
     const newApproved = !formData.approved;
-    const newApprovedBy = newApproved ? "Victor" : "";
+    const newApprovedBy = newApproved ? "Owner" : "";
     const newApprovedAt = newApproved ? new Date().toISOString() : "";
 
     // Update local state
@@ -182,7 +182,7 @@ export default function CardModal({ card, onClose, onUpdated }: Props) {
     setError("");
     try {
       const updated = await apiPost<Card>(`/api/cards/${card.id}/comments`, {
-        author: "Victor", // Auto-set - only Victor uses the web UI
+        author: "Owner", // Auto-set - only owner uses the web UI
         text: commentText,
       });
       setComments(updated.comments || []);
@@ -374,8 +374,8 @@ export default function CardModal({ card, onClose, onUpdated }: Props) {
                 onChange={(e) => updateFormData("assignee", e.target.value)}
               >
                 <option value="">Unassigned</option>
-                <option value="victor">Victor</option>
-                <option value="nova">Nova</option>
+                <option value="owner">Owner</option>
+                <option value="agent">Agent</option>
               </select>
             </label>
             <label>

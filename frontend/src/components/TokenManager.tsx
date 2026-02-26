@@ -113,7 +113,7 @@ export default function TokenManager() {
 
             <div className="auto-refresh-note">
               <span className="icon">🤖</span>
-              Token is auto-refreshed by Nova every 6 hours
+              Token is auto-refreshed by the agent every 6 hours
             </div>
           </div>
         )}

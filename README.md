@@ -1,17 +1,17 @@
-# Nova Dashboard
+# Agent Dashboard
 
 **Version: 1.1.1**
 
-A secure web dashboard for two-way communication between Victor and Nova. Hosted on Nova's EC2 instance, accessed securely via Cloudflare Tunnel with Zero Trust authentication.
+A secure web dashboard for two-way communication between the Owner and an AI Agent. Hosted on the Agent's EC2 instance, accessed securely via Cloudflare Tunnel with Zero Trust authentication.
 
-**URL:** `victorbrechbill.com/nova`
+**URL:** `YOUR_DOMAIN`
 
 ## Purpose
 
-- **Kanban Board** — Victor drops tasks in the backlog, Nova picks them up and works on them
+- **Kanban Board** — Owner drops tasks in the backlog, Agent picks them up and works on them
 - **Two-way communication** — Chat, status updates, task tracking
-- **File sharing** — Secure file exchange between Victor and Nova
-- **Project visibility** — Victor can see what Nova is working on from any browser
+- **File sharing** — Secure file exchange between Owner and Agent
+- **Project visibility** — Owner can see what Agent is working on from any browser
 
 ## Tech Stack
 
@@ -27,9 +27,9 @@ A secure web dashboard for two-way communication between Victor and Nova. Hosted
 ## Architecture
 
 ```
-Victor's Browser
-    ↓ HTTPS (victorbrechbill.com/nova)
-Cloudflare Zero Trust (email auth: victor's email)
+Owner's Browser
+    ↓ HTTPS (YOUR_DOMAIN)
+Cloudflare Zero Trust (email auth: owner's email)
     ↓ Cloudflare Tunnel
 cloudflared (on EC2, no public ports)
     ↓ localhost
@@ -44,7 +44,7 @@ React Frontend (built static assets served by Go)
 
 - **NO public ports exposed** on the EC2 instance
 - All traffic routed through Cloudflare Tunnel
-- Zero Trust authentication requires Victor's email login
+- Zero Trust authentication requires the owner's email login
 - No direct SSH or HTTP access from the internet needed for the dashboard
 - Backend only listens on localhost
 
@@ -82,10 +82,10 @@ dashboard/
 ### Phase 1: Kanban Board
 
 - Backlog, Approved, In Progress, Review, Done columns
-- Approval workflow: Victor approves backlog items before Nova works on them
+- Approval workflow: Owner approves backlog items before Agent works on them
 - Drag and drop cards between columns
 - Card details: title, description, type (bugfix/refactor/feature), priority
-- Assignment (Victor → Nova or Nova self-assigns)
+- Assignment (Owner → Agent or Agent self-assigns)
 - Comments on cards
 - Activity log
 
@@ -110,7 +110,7 @@ dashboard/
 - MongoDB
 - cloudflared (Cloudflare Tunnel client)
 - Cloudflare account with Zero Trust configured
-- Domain: victorbrechbill.com (DNS managed by Cloudflare)
+- Domain: YOUR_DOMAIN (DNS managed by Cloudflare)
 
 ## Development
 
@@ -129,10 +129,10 @@ Use the convenient dev script for local development:
 ```bash
 # Backend (manual)
 cd backend
-export NOVA_ENV=development
+export DASHBOARD_ENV=development
 export DASHBOARD_PORT=3081
 export MONGO_URI=mongodb://localhost:27017
-export MONGO_DATABASE=nova_dashboard_dev
+export MONGO_DATABASE=agent_dashboard_dev
 go run main.go
 
 # Frontend (manual)
@@ -156,12 +156,12 @@ npm run dev
 
    ```bash
    # Create production directory
-   mkdir -p ~/nova-dashboard/{config,logs}
+   mkdir -p ~/agent-dashboard/{config,logs}
 
    # Install systemd services
    systemctl --user daemon-reload
-   systemctl --user enable nova-mongo.service
-   systemctl --user enable nova-dashboard.service
+   systemctl --user enable agent-mongo.service
+   systemctl --user enable agent-dashboard.service
    ```
 
 2. **Deploy new version**:
@@ -173,20 +173,20 @@ npm run dev
 ### Production Architecture
 
 ```
-Production Directory: ~/nova-dashboard/
-├── nova-dashboard          # Compiled Go binary
+Production Directory: ~/agent-dashboard/
+├── agent-dashboard        # Compiled Go binary
 ├── frontend/               # Built React assets
 ├── config/
 │   └── prod.env           # Production environment
 └── logs/                  # Application logs
 
 Docker:
-├── nova-mongo-prod        # MongoDB container (port 27018)
-└── nova-mongo-prod-data   # Persistent data volume
+├── agent-mongo-prod       # MongoDB container (port 27018)
+└── agent-mongo-prod-data  # Persistent data volume
 
 Systemd Services:
-├── nova-mongo.service     # MongoDB container management
-├── nova-dashboard.service # Go backend service
+├── agent-mongo.service    # MongoDB container management
+├── agent-dashboard.service # Go backend service
 └── cloudflared.service    # Cloudflare tunnel (existing)
 ```
 
@@ -195,10 +195,10 @@ Systemd Services:
 ### Development
 
 ```bash
-NOVA_ENV=development
+DASHBOARD_ENV=development
 DASHBOARD_PORT=3081
 MONGO_URI=mongodb://localhost:27017
-MONGO_DATABASE=nova_dashboard_dev
+MONGO_DATABASE=agent_dashboard_dev
 FRONTEND_DIR=./frontend/dist
 LOG_DIR=./logs
 ```
@@ -206,32 +206,32 @@ LOG_DIR=./logs
 ### Production
 
 ```bash
-NOVA_ENV=production
+DASHBOARD_ENV=production
 DASHBOARD_PORT=3080
 MONGO_URI=mongodb://localhost:27018
-MONGO_DATABASE=nova_dashboard_prod
-FRONTEND_DIR=/home/ubuntu/nova-dashboard/frontend
-LOG_DIR=/home/ubuntu/nova-dashboard/logs
+MONGO_DATABASE=agent_dashboard_prod
+FRONTEND_DIR=/home/ubuntu/agent-dashboard/frontend
+LOG_DIR=/home/ubuntu/agent-dashboard/logs
 ```
 
 ## Service Management
 
 ```bash
 # Check service status
-systemctl --user status nova-dashboard.service
-systemctl --user status nova-mongo.service
+systemctl --user status agent-dashboard.service
+systemctl --user status agent-mongo.service
 
 # View logs
-journalctl --user -u nova-dashboard.service -f
-journalctl --user -u nova-mongo.service -f
+journalctl --user -u agent-dashboard.service -f
+journalctl --user -u agent-mongo.service -f
 
 # Restart services
-systemctl --user restart nova-dashboard.service
-systemctl --user restart nova-mongo.service
+systemctl --user restart agent-dashboard.service
+systemctl --user restart agent-mongo.service
 
-# Stop/start all Nova services
-systemctl --user stop nova-dashboard.service nova-mongo.service
-systemctl --user start nova-mongo.service nova-dashboard.service
+# Stop/start all Agent services
+systemctl --user stop agent-dashboard.service agent-mongo.service
+systemctl --user start agent-mongo.service agent-dashboard.service
 ```
 
 ## Health Check
@@ -241,7 +241,7 @@ systemctl --user start nova-mongo.service nova-dashboard.service
 curl http://localhost:3080/api/health
 
 # Check via Cloudflare tunnel
-curl https://nova.victorbrechbill.com/api/health
+curl https://YOUR_DOMAIN/api/health
 ```
 
 ## Versioning

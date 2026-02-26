@@ -1,8 +1,8 @@
 # Build outputs
-nova-dashboard
-nova-dashboard-dev
-backend/nova-dashboard
-backend/nova-dashboard-dev
+agent-dashboard
+agent-dashboard-dev
+backend/agent-dashboard
+backend/agent-dashboard-dev
 frontend/build/
 frontend/dist/
 

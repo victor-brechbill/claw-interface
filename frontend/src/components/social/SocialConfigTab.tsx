@@ -45,7 +45,7 @@ interface TommyConfig {
   budget: {
     monthlyXBudget: number;
   };
-  victorProfile: {
+  ownerProfile: {
     username: string;
     maxLikesToScan: number;
     maxTweetsToScan: number;
@@ -95,8 +95,8 @@ const DEFAULT_CONFIG: TommyConfig = {
     searchDelayMs: 3000,
   },
   budget: { monthlyXBudget: 10 },
-  victorProfile: {
-    username: "victor__vector",
+  ownerProfile: {
+    username: "your_handle",
     maxLikesToScan: 20,
     maxTweetsToScan: 10,
   },
@@ -123,8 +123,8 @@ export default function SocialConfigTab() {
         if (data.rateLimits)
           c.rateLimits = { ...c.rateLimits, ...data.rateLimits };
         if (data.budget) c.budget = { ...c.budget, ...data.budget };
-        if (data.victorProfile)
-          c.victorProfile = { ...c.victorProfile, ...data.victorProfile };
+        if (data.ownerProfile)
+          c.ownerProfile = { ...c.ownerProfile, ...data.ownerProfile };
         if (data.maxLikesPerAuthor != null)
           c.maxLikesPerAuthor = data.maxLikesPerAuthor;
         setConfig(c);
@@ -328,20 +328,20 @@ export default function SocialConfigTab() {
       </div>
 
       <div className="config-section">
-        <div className="config-section-title">Victor Profile</div>
+        <div className="config-section-title">Owner Profile</div>
         <div className="config-row">
           <span className="config-label">Username</span>
           <input
             className="config-input"
             style={{ width: 160 }}
-            value={config.victorProfile.username}
+            value={config.ownerProfile.username}
             onChange={(e) =>
-              update("victorProfile", "username", e.target.value)
+              update("ownerProfile", "username", e.target.value)
             }
           />
         </div>
-        {numField("victorProfile", "maxLikesToScan", "Likes to Scan", 1, 100)}
-        {numField("victorProfile", "maxTweetsToScan", "Tweets to Scan", 1, 100)}
+        {numField("ownerProfile", "maxLikesToScan", "Likes to Scan", 1, 100)}
+        {numField("ownerProfile", "maxTweetsToScan", "Tweets to Scan", 1, 100)}
       </div>
 
       <div className="config-section">

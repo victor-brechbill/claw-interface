@@ -1,6 +1,6 @@
-# Victor's Interests
+# Owner's Interests
 
-_This file is maintained by Nova. Tommy reads this to know what to look for._
+_This file is maintained by the agent. Tommy reads this to know what to look for._
 
 ## Core Interests
 
@@ -46,7 +46,7 @@ _This file is maintained by Nova. Tommy reads this to know what to look for._
 
 ## Stock Watchlist
 
-_Auto-populated from Nova Dashboard_
+_Auto-populated from Agent Dashboard_
 
 <!-- WATCHLIST_START -->
 
@@ -54,7 +54,7 @@ _Auto-populated from Nova Dashboard_
 - TSLA (Tesla)
 <!-- WATCHLIST_END -->
 
-_Nova should update this section by querying the dashboard API_
+_The agent should update this section by querying the dashboard API_
 
 ## Topics to AVOID (Do Not Like/Engage)
 
@@ -79,5 +79,5 @@ _Nova should update this section by querying the dashboard API_
 
 ---
 
-_Last updated: 2026-01-30 by Nova_
-_Next review: Weekly or when Victor mentions new interests_
+_Last updated: 2026-01-30 by the agent_
+_Next review: Weekly or when the owner mentions new interests_

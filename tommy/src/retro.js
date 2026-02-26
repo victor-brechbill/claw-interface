@@ -11,7 +11,7 @@ const OUTPUT_PATH = '/tmp/tommy-retro-data.json';
 
 async function main() {
   const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27018';
-  const dbName = process.env.MONGODB_DATABASE || 'nova_dashboard_prod';
+  const dbName = process.env.MONGODB_DATABASE || 'agent_dashboard_prod';
 
   const client = await MongoClient.connect(mongoUri);
   const db = client.db(dbName);

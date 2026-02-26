@@ -1,12 +1,12 @@
 # Tommy X API Client
 
-Official X API v2 client for Tommy to browse, search, like, and follow content matching Victor's interests. This replaces the legacy browser automation system with official API calls.
+Official X API v2 client for Tommy to browse, search, like, and follow content matching the owner's interests. This replaces the legacy browser automation system with official API calls.
 
 ## Features
 
 - **Home Timeline Browsing**: Scans Tommy's "For You" feed for interesting content
-- **Topic Search**: Searches for posts matching Victor's interests
-- **Interest Matching**: Scores posts based on topics and stock tickers
+- **Topic Search**: Searches for posts matching the owner's interests
+- **Interest Matching**: Scores posts based on the owner's topics and stock tickers
 - **Smart Actions**: Likes posts and follows high-quality authors (with safety limits)
 - **MongoDB Integration**: Saves finds to existing `tommy_finds` and `tommy_sessions` collections
 - **Rate Limiting**: Respectful API usage with configurable delays
@@ -123,7 +123,7 @@ All settings are configurable via environment variables:
 ### Database
 
 - `MONGODB_URI=mongodb://localhost:27017` - MongoDB connection string
-- `MONGODB_DATABASE=nova_dashboard_prod` - Database name
+- `MONGODB_DATABASE=agent_dashboard_prod` - Database name
 - Uses existing collections: `tommy_finds`, `tommy_sessions`
 
 ## How It Works
@@ -131,14 +131,14 @@ All settings are configurable via environment variables:
 ### Phase 1: Home Timeline
 
 1. Fetches Tommy's home timeline (max 100 posts)
-2. Scores each post against Victor's interests
+2. Scores each post against the owner's interests
 3. Likes top matches (up to session limit)
 4. Follows authors of high-quality posts
 5. Saves interesting finds to MongoDB
 
 ### Phase 2: Topic Search
 
-1. Picks 3-5 random topics from Victor's interests
+1. Picks 3-5 random topics from the owner's interests
 2. Searches recent posts for each topic
 3. Same scoring/like/follow/save workflow
 4. Tracks stats per search
@@ -214,12 +214,12 @@ Old browser scripts are archived to:
 ### Database Errors
 
 - Verify MongoDB is running: `systemctl status mongod`
-- Check database exists: `mongo nova_dashboard_prod --eval "db.stats()"`
+- Check database exists: `mongo agent_dashboard_prod --eval "db.stats()"`
 - Ensure collections exist: `tommy_finds`, `tommy_sessions`
 
 ### Interest Matching
 
-- Check interests file exists: `interests/victor-interests.md`
+- Check interests file exists: `interests/owner-interests.md`
 - Verify interests are loading: look for "Loaded X topics and Y tickers" in logs
 - Test scoring: `node -e "const IM = require('./src/interest-matcher'); const im = new IM(); im.loadInterests().then(() => console.log(im.scorePost({text: 'SpaceX rocket launch!'})))"`
 

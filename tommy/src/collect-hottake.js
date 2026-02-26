@@ -5,7 +5,7 @@
  * 
  * Modes:
  *   --mode x_trending     Fetch trending topics from X
- *   --mode victor_archive  Search Victor's recent posts
+ *   --mode owner_archive   Search owner's recent posts
  *   --mode web_search      Placeholder (agent handles via web_search tool)
  * 
  * Output: /tmp/tommy-hottake-inspiration.json
@@ -80,13 +80,13 @@ async function collectTrending(xClient) {
   console.error(`📁 Output written to ${outFile}`);
 }
 
-async function collectVictorArchive(xClient) {
-  const victorUsername = config.HOT_TAKE_CONFIG.VICTOR_USERNAME;
-  console.error(`🔍 Searching Victor's archive (@${victorUsername})...`);
+async function collectOwnerArchive(xClient) {
+  const ownerUsername = config.HOT_TAKE_CONFIG.OWNER_USERNAME;
+  console.error(`🔍 Searching owner's archive (@${ownerUsername})...`);
 
   const queries = [
-    `from:${victorUsername}`,
-    `from:${victorUsername} (idea OR think OR future OR should)`,
+    `from:${ownerUsername}`,
+    `from:${ownerUsername} (idea OR think OR future OR should)`,
   ];
 
   // Randomize: pick 1-2 queries
@@ -111,7 +111,7 @@ async function collectVictorArchive(xClient) {
         allPosts.push({
           id: post.id,
           text: (post.text || '').slice(0, 500),
-          authorUsername: author?.username || victorUsername,
+          authorUsername: author?.username || ownerUsername,
           metrics: {
             likes: post.public_metrics?.like_count || 0,
             retweets: post.public_metrics?.retweet_count || 0,
@@ -126,7 +126,7 @@ async function collectVictorArchive(xClient) {
   }
 
   const output = {
-    source: 'victor_archive',
+    source: 'owner_archive',
     date: today(),
     posts: allPosts,
   };
@@ -168,8 +168,8 @@ async function main() {
 
     if (mode === 'x_trending') {
       await collectTrending(xClient);
-    } else if (mode === 'victor_archive') {
-      await collectVictorArchive(xClient);
+    } else if (mode === 'owner_archive') {
+      await collectOwnerArchive(xClient);
     } else {
       console.error(`❌ Unknown mode: ${mode}`);
       process.exit(1);

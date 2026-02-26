@@ -17,9 +17,9 @@ export default defineConfig({
         "icon-512x512-v2.svg",
       ],
       manifest: {
-        name: "Nova Dashboard",
-        short_name: "Nova",
-        description: "Nova Dashboard - Kanban board and system management",
+        name: "Agent Dashboard",
+        short_name: "Agent",
+        description: "Agent Dashboard - Kanban board and system management",
         theme_color: "#c9a0dc",
         background_color: "#0d1117",
         display: "standalone",

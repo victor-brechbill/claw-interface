@@ -27,8 +27,8 @@ interface TreeSectionConfig {
 const TREE_SECTIONS: TreeSectionConfig[] = [
   {
     id: "workspace",
-    title: "Nova",
-    icon: "✨",
+    title: "Agent",
+    icon: ">",
     items: [
       { id: "agents", label: "AGENTS.md", type: "file" },
       { id: "soul", label: "SOUL.md", type: "file" },

@@ -1,4 +1,4 @@
-module nova-dashboard
+module agent-dashboard
 
 go 1.22
 

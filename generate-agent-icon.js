@@ -1,5 +1,5 @@
-// Generate Nova Avatar SVG using the exact same algorithms from NovaAvatar.tsx
-// VERSION 4 - the one Victor approved
+// Generate Agent Avatar SVG using the exact same algorithms from AgentAvatar.tsx
+// VERSION 4
 
 const width = 512;
 const height = 512;

@@ -1,4 +1,4 @@
-# NOVA Dashboard
+# Agent Dashboard
 
 ## Project Structure
 
@@ -25,5 +25,5 @@
 
 - `GATEWAY_WS_URL` — WebSocket URL for OpenClaw gateway (default: `ws://localhost:18789`)
 - `MONGO_URI` — MongoDB connection string
-- `MONGO_DATABASE` — Database name (default: `nova-dashboard`)
+- `MONGO_DATABASE` — Database name (default: `agent-dashboard`)
 - `DASHBOARD_PORT` — Server port (default: `3080`)

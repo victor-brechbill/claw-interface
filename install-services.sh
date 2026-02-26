@@ -33,18 +33,18 @@ install_services() {
     mkdir -p ~/.config/systemd/user
     
     # Check if services already exist
-    if [[ -f ~/.config/systemd/user/nova-dashboard.service ]]; then
-        warning "nova-dashboard.service already exists, backing up..."
-        cp ~/.config/systemd/user/nova-dashboard.service ~/.config/systemd/user/nova-dashboard.service.bak
+    if [[ -f ~/.config/systemd/user/agent-dashboard.service ]]; then
+        warning "agent-dashboard.service already exists, backing up..."
+        cp ~/.config/systemd/user/agent-dashboard.service ~/.config/systemd/user/agent-dashboard.service.bak
     fi
     
-    if [[ -f ~/.config/systemd/user/nova-mongo.service ]]; then
-        warning "nova-mongo.service already exists, backing up..."
-        cp ~/.config/systemd/user/nova-mongo.service ~/.config/systemd/user/nova-mongo.service.bak
+    if [[ -f ~/.config/systemd/user/agent-mongo.service ]]; then
+        warning "agent-mongo.service already exists, backing up..."
+        cp ~/.config/systemd/user/agent-mongo.service ~/.config/systemd/user/agent-mongo.service.bak
     fi
     
     # Copy service files (they're already created by the deployment setup)
-    if [[ -f ~/.config/systemd/user/nova-mongo.service ]] && [[ -f ~/.config/systemd/user/nova-dashboard.service ]]; then
+    if [[ -f ~/.config/systemd/user/agent-mongo.service ]] && [[ -f ~/.config/systemd/user/agent-dashboard.service ]]; then
         log "Service files already installed"
     else
         error "Service files not found. Please run the deployment setup first."
@@ -61,8 +61,8 @@ enable_services() {
     log "Enabling systemd services..."
     
     # Enable services (they will start automatically on login)
-    systemctl --user enable nova-mongo.service
-    systemctl --user enable nova-dashboard.service
+    systemctl --user enable agent-mongo.service
+    systemctl --user enable agent-dashboard.service
     
     success "Services enabled"
 }
@@ -73,11 +73,11 @@ show_status() {
     echo ""
     
     echo "MongoDB service:"
-    systemctl --user status nova-mongo.service --no-pager -l || true
+    systemctl --user status agent-mongo.service --no-pager -l || true
     echo ""
     
     echo "Dashboard service:"
-    systemctl --user status nova-dashboard.service --no-pager -l || true
+    systemctl --user status agent-dashboard.service --no-pager -l || true
     echo ""
     
     echo "Cloudflare tunnel service:"
@@ -86,7 +86,7 @@ show_status() {
 
 # Main function
 main() {
-    log "Installing Nova Dashboard systemd services..."
+    log "Installing Agent Dashboard systemd services..."
     
     install_services
     enable_services
@@ -94,15 +94,15 @@ main() {
     success "Installation complete!"
     
     log "Services installed and enabled:"
-    log "- nova-mongo.service (MongoDB production container)"
-    log "- nova-dashboard.service (Go backend)"
+    log "- agent-mongo.service (MongoDB production container)"
+    log "- agent-dashboard.service (Go backend)"
     log ""
     log "To start the services manually:"
-    log "  systemctl --user start nova-mongo.service"
-    log "  systemctl --user start nova-dashboard.service"
+    log "  systemctl --user start agent-mongo.service"
+    log "  systemctl --user start agent-dashboard.service"
     log ""
     log "To check status:"
-    log "  systemctl --user status nova-dashboard.service"
+    log "  systemctl --user status agent-dashboard.service"
     log ""
     
     show_status

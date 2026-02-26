@@ -13,8 +13,8 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
-	"nova-dashboard/db"
-	"nova-dashboard/handlers"
+	"agent-dashboard/db"
+	"agent-dashboard/handlers"
 )
 
 type HealthResponse struct {
@@ -171,7 +171,7 @@ func main() {
 	// Request logging middleware
 	handler := loggingMiddleware(logger, mux)
 
-	logger.Info("Nova Dashboard starting",
+	logger.Info("Agent Dashboard starting",
 		zap.String("port", port),
 		zap.String("frontend_dir", frontendDir),
 	)

@@ -1,7 +1,7 @@
 {
   "name": "tommy-x-api",
   "version": "1.0.0",
-  "description": "X API v2 client for Tommy to browse, search, like, and follow content matching Victor's interests",
+  "description": "X API v2 client for Tommy to browse, search, like, and follow content matching the owner's interests",
   "main": "src/session-runner.js",
   "scripts": {
     "start": "node src/session-runner.js",
@@ -22,6 +22,6 @@
     "automation",
     "social-media"
   ],
-  "author": "Nova Dashboard",
+  "author": "Agent Dashboard",
   "license": "MIT"
 }

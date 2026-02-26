@@ -4,8 +4,8 @@ import (
 	"context"
 	"log"
 
-	"nova-dashboard/db"
-	"nova-dashboard/migrations"
+	"agent-dashboard/db"
+	"agent-dashboard/migrations"
 )
 
 func main() {

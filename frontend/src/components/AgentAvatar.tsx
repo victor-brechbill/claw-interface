@@ -20,13 +20,13 @@ interface ConnectionLine {
 
 export type Expression = "neutral" | "happy" | "busy" | "curious" | "sleepy";
 
-interface NovaAvatarProps {
+interface AgentAvatarProps {
   width?: number;
   height?: number;
   expression?: Expression;
 }
 
-const NovaAvatar: React.FC<NovaAvatarProps> = ({
+const AgentAvatar: React.FC<AgentAvatarProps> = ({
   width = 400,
   height = 400,
   expression = "neutral",
@@ -78,7 +78,7 @@ const NovaAvatar: React.FC<NovaAvatarProps> = ({
       bgImageRef.current = img;
       setBgLoaded(true);
     };
-    img.src = "/nova-bg.jpg";
+    img.src = "/agent-bg.jpg";
   }, []);
 
   // Initialize timing values on mount
@@ -889,4 +889,4 @@ const NovaAvatar: React.FC<NovaAvatarProps> = ({
   );
 };
 
-export default NovaAvatar;
+export default AgentAvatar;

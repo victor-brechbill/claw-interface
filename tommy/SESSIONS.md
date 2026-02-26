@@ -6,7 +6,7 @@ Tommy (@TommyPickles999) runs 3 daily sessions on X, each with a different purpo
 
 ## 🔍 Explore Session (11:00 AM ET)
 
-**Purpose:** Discover content matching Victor's interests, build engagement organically.
+**Purpose:** Discover content matching the owner's interests, build engagement organically.
 
 **Cron Job:** `Tommy Explore Session` (id: `6bcaf82e-...`)
 **Schedule:** Daily at 11:00 AM ET
@@ -23,7 +23,7 @@ Tommy (@TommyPickles999) runs 3 daily sessions on X, each with a different purpo
 
 - `src/collect.js --type explore` — Collect timeline + interest search posts
 - `src/engage.js <scores> <collected>` — Execute likes, follows, quote-RTs
-- `src/interest-matcher.js` — Score posts against Victor's interests
+- `src/interest-matcher.js` — Score posts against the owner's interests
 
 ### Config (MongoDB `tommy_config`)
 
@@ -106,7 +106,7 @@ Tommy (@TommyPickles999) runs 3 daily sessions on X, each with a different purpo
 2. **Determine Inspiration Source** — Rotates day-by-day through 3 sources:
    - **Day 1: Web Search** — Tommy picks an interesting topic, explores it via web search, forms an original angle
    - **Day 2: X Trending** — Fetches personalized trending topics via API, picks the most intellectually interesting one
-   - **Day 3: Victor's Archive** — Searches @victor\_\_vector's post history for interesting old ideas to expand on
+   - **Day 3: Owner's Archive** — Searches the owner's post history for interesting old ideas to expand on
 3. **Collect Inspiration** — `collect-hottake.js --mode <source>` gathers raw material
 4. **Generate Hot Take** — Agent develops a genuinely ORIGINAL take. Not a summary — a new idea built on the seed.
 5. **Plan Engagements** — Agent creates a plan with up to `maxEngagements` interactions
@@ -118,7 +118,7 @@ Tommy (@TommyPickles999) runs 3 daily sessions on X, each with a different purpo
 
 ### Key Scripts
 
-- `src/collect-hottake.js --mode <web_search|x_trending|victor_archive>` — Collect inspiration
+- `src/collect-hottake.js --mode <web_search|x_trending|owner_archive>` — Collect inspiration
 - `src/execute-hottake.js --plan /tmp/tommy-hottake-plan.json` — Execute engagements
 - `src/gen-hottake-image.js` — Generate images via OpenAI API
 
@@ -129,8 +129,8 @@ Tommy (@TommyPickles999) runs 3 daily sessions on X, each with a different purpo
   "hotTake": {
     "enabled": true,
     "maxEngagements": 3,
-    "inspirationRotation": ["web_search", "x_trending", "victor_archive"],
-    "victorUsername": "victor__vector",
+    "inspirationRotation": ["web_search", "x_trending", "owner_archive"],
+    "ownerUsername": "your_handle",
     "minFollowersForQuoteRT": 5000,
     "imageGenEnabled": true,
     "imageModel": "gpt-image-1",

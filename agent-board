@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 #
-# nova-board - CLI tool for Nova Dashboard Kanban board
-# Makes it easy for Nova (or anyone) to manage cards from the terminal
+# agent-board - CLI tool for Agent Dashboard Kanban board
+# Makes it easy for the agent (or anyone) to manage cards from the terminal
 #
 
 set -e
 
-API_URL="${NOVA_BOARD_API:-http://localhost:3080}"
+API_URL="${AGENT_BOARD_API:-http://localhost:3080}"
 
 # Colors
 RED='\033[0;31m'
@@ -42,7 +42,7 @@ priority_color() {
 # Type emoji
 type_icon() {
   case "$1" in
-    feature) echo "✨" ;;
+    feature) echo "+" ;;
     bug) echo "🐛" ;;
     improvement) echo "🔧" ;;
     idea) echo "💡" ;;
@@ -52,10 +52,10 @@ type_icon() {
 
 usage() {
   cat << EOF
-${BOLD}nova-board${NC} - Kanban board CLI for Nova Dashboard
+${BOLD}agent-board${NC} - Kanban board CLI for Agent Dashboard
 
 ${BOLD}USAGE:${NC}
-    nova-board <command> [options]
+    agent-board <command> [options]
 
 ${BOLD}COMMANDS:${NC}
     ${CYAN}list${NC} [column]           List cards (optionally filter by column)
@@ -85,15 +85,15 @@ ${BOLD}OPTIONS FOR EDIT:${NC}
     --assignee <name>     Update assignee
 
 ${BOLD}EXAMPLES:${NC}
-    nova-board list
-    nova-board list backlog
-    nova-board create "Add dark mode" --type feature --priority medium
-    nova-board move abc123 in_progress
-    nova-board comment abc123 "Started working on this"
-    nova-board search "mobile"
+    agent-board list
+    agent-board list backlog
+    agent-board create "Add dark mode" --type feature --priority medium
+    agent-board move abc123 in_progress
+    agent-board comment abc123 "Started working on this"
+    agent-board search "mobile"
 
 ${BOLD}ENVIRONMENT:${NC}
-    NOVA_BOARD_API    API URL (default: http://localhost:3080)
+    AGENT_BOARD_API    API URL (default: http://localhost:3080)
 EOF
 }
 
@@ -170,7 +170,7 @@ cmd_create() {
   local title=""
   local type="feature"
   local priority="medium"
-  local assignee="nova"
+  local assignee="agent"
   local column="backlog"
   local description=""
   
@@ -228,7 +228,7 @@ cmd_move() {
   
   if [ -z "$id" ] || [ -z "$column" ]; then
     echo -e "${RED}Error: Card ID and column required${NC}" >&2
-    echo "Usage: nova-board move <id> <column>"
+    echo "Usage: agent-board move <id> <column>"
     exit 1
   fi
   
@@ -269,7 +269,7 @@ cmd_comment() {
   
   if [ -z "$id" ] || [ -z "$text" ]; then
     echo -e "${RED}Error: Card ID and comment text required${NC}" >&2
-    echo "Usage: nova-board comment <id> <text>"
+    echo "Usage: agent-board comment <id> <text>"
     exit 1
   fi
   
@@ -282,7 +282,7 @@ cmd_comment() {
     exit 1
   fi
   
-  local payload=$(jq -n --arg author "Nova" --arg text "$text" '{author: $author, text: $text}')
+  local payload=$(jq -n --arg author "Agent" --arg text "$text" '{author: $author, text: $text}')
   
   local result=$(curl -s -X POST "${API_URL}/api/cards/${full_id}/comments" \
     -H "Content-Type: application/json" \
@@ -412,5 +412,5 @@ case "${1:-}" in
   columns) cmd_columns ;;
   help|--help|-h) usage ;;
   "") usage ;;
-  *) echo -e "${RED}Unknown command: $1${NC}" >&2; echo "Run 'nova-board help' for usage."; exit 1 ;;
+  *) echo -e "${RED}Unknown command: $1${NC}" >&2; echo "Run 'agent-board help' for usage."; exit 1 ;;
 esac

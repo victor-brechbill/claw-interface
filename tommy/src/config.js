@@ -23,7 +23,7 @@ const RATE_LIMITS = {
 // MongoDB Configuration
 const MONGODB = {
   URI: process.env.MONGODB_URI || 'mongodb://localhost:27017',
-  DATABASE: process.env.MONGODB_DATABASE || 'nova_dashboard_prod',
+  DATABASE: process.env.MONGODB_DATABASE || 'agent_dashboard_prod',
   COLLECTIONS: {
     FINDS: 'tommy_finds',
     SESSIONS: 'tommy_sessions'
@@ -77,13 +77,13 @@ const AVOID_PATTERNS = [
   /check out my/i,
 ];
 
-// Victor's profile for dynamic interest scanning (Fix 7)
-const VICTOR_PROFILE = {
-  USERNAME: process.env.VICTOR_X_USERNAME || 'victor__vector',
-  MAX_LIKES_TO_SCAN: parseInt(process.env.VICTOR_LIKES_SCAN) || 20,
-  MAX_TWEETS_TO_SCAN: parseInt(process.env.VICTOR_TWEETS_SCAN) || 10,
-  DYNAMIC_TOPIC_WEIGHT: 5,   // Points per topic from Victor's activity (vs 2 for static)
-  DYNAMIC_AUTHOR_BOOST: 3,   // Bonus points if author is someone Victor engages with
+// Owner's profile for dynamic interest scanning (Fix 7)
+const OWNER_PROFILE = {
+  USERNAME: process.env.OWNER_X_USERNAME || 'your_handle',
+  MAX_LIKES_TO_SCAN: parseInt(process.env.OWNER_LIKES_SCAN) || 20,
+  MAX_TWEETS_TO_SCAN: parseInt(process.env.OWNER_TWEETS_SCAN) || 10,
+  DYNAMIC_TOPIC_WEIGHT: 5,   // Points per topic from owner's activity (vs 2 for static)
+  DYNAMIC_AUTHOR_BOOST: 3,   // Bonus points if author is someone owner engages with
 };
 
 // Author diversity cap (Fix 4)
@@ -127,8 +127,8 @@ const MARKET_SESSION = {
 const HOT_TAKE_CONFIG = {
   ENABLED: true,
   MAX_ENGAGEMENTS: 3,
-  INSPIRATION_ROTATION: ['web_search', 'x_trending', 'victor_archive'],
-  VICTOR_USERNAME: 'victor__vector',
+  INSPIRATION_ROTATION: ['web_search', 'x_trending', 'owner_archive'],
+  OWNER_USERNAME: 'your_handle',
   MIN_FOLLOWERS_FOR_QUOTE_RT: 5000,
   IMAGE_GEN_ENABLED: true,
   IMAGE_MODEL: 'gpt-image-1',
@@ -136,9 +136,9 @@ const HOT_TAKE_CONFIG = {
   IMAGE_STYLE: 'abstract, futuristic, dark, thought-provoking',
 };
 
-// Victor's interest profile path
-const VICTOR_INTERESTS_PATH = process.env.VICTOR_INTERESTS_PATH
-  || require('path').join(__dirname, '..', 'interests', 'victor-interests.md');
+// Owner's interest profile path
+const OWNER_INTERESTS_PATH = process.env.OWNER_INTERESTS_PATH
+  || require('path').join(__dirname, '..', 'interests', 'owner-interests.md');
 
 // Load runtime config from MongoDB, falling back to .env/defaults
 async function loadRuntimeConfig(db) {
@@ -168,11 +168,11 @@ module.exports = {
   USER_FIELDS,
   AVOID_PATTERNS,
   PRICING,
-  VICTOR_PROFILE,
+  OWNER_PROFILE,
   MAX_LIKES_PER_AUTHOR,
   AI_CONFIG,
   POSTING_CONFIG,
-  VICTOR_INTERESTS_PATH,
+  OWNER_INTERESTS_PATH,
   DSP_API_URL,
   MARKET_SESSION,
   HOT_TAKE_CONFIG,
