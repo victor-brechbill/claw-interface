@@ -3,8 +3,6 @@ import "./App.css";
 import StatusDashboard from "./components/StatusDashboard";
 import Board from "./components/Board";
 import System from "./components/System";
-import SocialPage from "./pages/SocialPage";
-import Stocks from "./components/Stocks";
 import BriefArchive from "./components/BriefArchive";
 import InspectPage from "./components/InspectPage";
 import Navigation from "./components/Navigation";
@@ -22,8 +20,6 @@ function App() {
               <Routes>
                 <Route path="/" element={<StatusDashboard />} />
                 <Route path="/kanban" element={<Board />} />
-                <Route path="/stocks" element={<Stocks />} />
-                <Route path="/social" element={<SocialPage />} />
                 <Route path="/system" element={<System />} />
                 <Route path="/briefs" element={<BriefArchive />} />
                 <Route path="/inspect" element={<InspectPage />} />

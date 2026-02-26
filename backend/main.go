@@ -103,22 +103,6 @@ func main() {
 	systemHandler := handlers.NewSystemHandler(logger, db.DoctorReportsCollection(mongoClient))
 	systemHandler.RegisterRoutes(mux)
 
-	// Tommy API routes
-	tommyHandler := handlers.NewTommyHandler(logger, db.TommyFindsCollection(mongoClient), db.TommySessionsCollection(mongoClient), db.TommyPostsCollection(mongoClient))
-	tommyHandler.RegisterRoutes(mux)
-
-	// Tommy Config API routes
-	tommyConfigHandler := handlers.NewTommyConfigHandler(logger, db.TommyConfigCollection(mongoClient))
-	tommyConfigHandler.RegisterRoutes(mux)
-
-	// Tommy Cron API routes
-	tommyCronHandler := handlers.NewTommyCronHandler(logger)
-	tommyCronHandler.RegisterRoutes(mux)
-
-	// Stocks API routes
-	stocksHandler := handlers.NewStocksHandler(db.StockWatchlistCollection(mongoClient), logger)
-	stocksHandler.RegisterRoutes(mux)
-
 	// Sessions API routes
 	sessionsHandler := handlers.NewSessionsHandler(logger)
 	sessionsHandler.RegisterRoutes(mux)

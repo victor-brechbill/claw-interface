@@ -10,8 +10,6 @@ const navItems: NavItem[] = [
   { path: "/", label: "Status" },
   { path: "/kanban", label: "Tasks" },
   { path: "/briefs", label: "Briefs" },
-  { path: "/stocks", label: "Stocks" },
-  { path: "/social", label: "Social" },
   { path: "/inspect", label: "Inspect" },
   { path: "/system", label: "System" },
 ];
