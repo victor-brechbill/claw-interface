@@ -11,6 +11,13 @@ import (
 	"go.uber.org/zap"
 )
 
+func kernelDir() string {
+	if dir := os.Getenv("KERNEL_DIR"); dir != "" {
+		return dir
+	}
+	return filepath.Join(os.Getenv("HOME"), "clawd")
+}
+
 type InspectHandler struct {
 	logger *zap.Logger
 }
@@ -21,41 +28,21 @@ func NewInspectHandler(logger *zap.Logger) *InspectHandler {
 	}
 }
 
-// Allowlisted files only for security
-var allowedFiles = map[string]string{
-	// Agent workspace
-	"agents":       "/home/ubuntu/clawd/AGENTS.md",
-	"soul":         "/home/ubuntu/clawd/SOUL.md",
-	"tools":        "/home/ubuntu/clawd/TOOLS.md",
-	"user":         "/home/ubuntu/clawd/USER.md",
-	"identity":     "/home/ubuntu/clawd/IDENTITY.md",
-	"heartbeat":    "/home/ubuntu/clawd/HEARTBEAT.md",
-	"memory":       "/home/ubuntu/clawd/MEMORY.md",
-	"architecture": "/home/ubuntu/clawd/vault/dev/repos/dashboard/ARCHITECTURE.md",
-	"sessions":     "/home/ubuntu/clawd/vault/dev/repos/dashboard/tommy/SESSIONS.md",
+// Allowlisted files only for security.
+// Paths are resolved from KERNEL_DIR (env) or $HOME/clawd.
+var allowedFiles = buildAllowedFiles()
 
-	// Developer workspace
-	"dev-agents": "/home/ubuntu/clawd-developer/AGENTS.md",
-
-	// Code Reviewer workspace
-	"reviewer-agents": "/home/ubuntu/clawd-code-reviewer/AGENTS.md",
-
-	// Tommy workspace
-	"tommy-agents":         "/home/ubuntu/clawd-tommy/AGENTS.md",
-	"tommy-soul":           "/home/ubuntu/clawd-tommy/SOUL.md",
-	"tommy-tools":          "/home/ubuntu/clawd-tommy/TOOLS.md",
-	"tommy-identity":       "/home/ubuntu/clawd-tommy/IDENTITY.md",
-	"tommy-wins":           "/home/ubuntu/clawd-tommy/wins.md",
-	"tommy-voice-examples": "/home/ubuntu/clawd-tommy/voice-examples.md",
-
-	// Tommy cron session prompts
-	"tommy-market-prompt":  "/home/ubuntu/clawd/vault/inspect-refs/tommy-market-session-prompt.md",
-	"tommy-explore-prompt": "/home/ubuntu/clawd/vault/inspect-refs/tommy-explore-session-prompt.md",
-	"tommy-hottake-prompt": "/home/ubuntu/clawd/vault/inspect-refs/tommy-hottake-session-prompt.md",
-
-	// NS Testing
-	"ns-testing-agents": "/home/ubuntu/clawd-ns-tester/AGENTS.md",
-	"ns-testing-prompt": "/home/ubuntu/clawd/vault/inspect-refs/ns-daily-testing-prompt.md",
+func buildAllowedFiles() map[string]string {
+	kd := kernelDir()
+	return map[string]string{
+		"agents":    filepath.Join(kd, "AGENTS.md"),
+		"tools":     filepath.Join(kd, "TOOLS.md"),
+		"heartbeat": filepath.Join(kd, "HEARTBEAT.md"),
+		"soul":      filepath.Join(kd, "SOUL.md"),
+		"identity":  filepath.Join(kd, "IDENTITY.md"),
+		"user":      filepath.Join(kd, "USER.md"),
+		"memory":    filepath.Join(kd, "MEMORY.md"),
+	}
 }
 
 func (h *InspectHandler) RegisterRoutes(mux *http.ServeMux) {
