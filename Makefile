@@ -6,7 +6,7 @@ dev-backend:
 
 # Run Go backend serving built frontend
 run:
-	FRONTEND_DIR=./frontend/build ./nova-dashboard
+	FRONTEND_DIR=./frontend/build ./agent-dashboard
 
 # Run React frontend dev server
 dev-frontend:
@@ -15,7 +15,7 @@ dev-frontend:
 # Build frontend and run backend serving static files
 build:
 	cd frontend && npm run build
-	cd backend && go build -o ../nova-dashboard .
+	cd backend && go build -o ../agent-dashboard .
 
 # Install all dependencies
 install:
@@ -25,4 +25,4 @@ install:
 # Clean build artifacts
 clean:
 	rm -rf frontend/build
-	rm -f nova-dashboard
+	rm -f agent-dashboard

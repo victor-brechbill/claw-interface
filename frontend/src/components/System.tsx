@@ -397,10 +397,10 @@ export default function System() {
   const loadActivityGrids = useCallback(async () => {
     try {
       const repos = [
-        { key: "dashboard", path: "victor-brechbill/nova" },
-        { key: "ns", path: "victor-brechbill/neighborhood-share" },
-        { key: "dsp", path: "victor-brechbill/dailystockpick" },
-        { key: "kernel", path: "victor-brechbill/nova-kernel" },
+        { key: "dashboard", path: "YOUR_ORG/agent-dashboard" },
+        { key: "ns", path: "YOUR_ORG/neighborhood-share" },
+        { key: "dsp", path: "YOUR_ORG/dailystockpick" },
+        { key: "kernel", path: "YOUR_ORG/agent-kernel" },
       ];
       const grids: Record<string, ActivityGrid> = {};
 
@@ -1045,7 +1045,7 @@ export default function System() {
               {activityGrids.dashboard && (
                 <ActivityGridComponent
                   agentId="Dashboard"
-                  repoUrl="https://github.com/victor-brechbill/nova"
+                  repoUrl="https://github.com/YOUR_ORG/agent-dashboard"
                   data={activityGrids.dashboard.windows}
                   days={activityDays}
                 />
@@ -1053,7 +1053,7 @@ export default function System() {
               {activityGrids.ns && (
                 <ActivityGridComponent
                   agentId="NeighborhoodShare"
-                  repoUrl="https://github.com/victor-brechbill/neighborhood-share"
+                  repoUrl="https://github.com/YOUR_ORG/neighborhood-share"
                   data={activityGrids.ns.windows}
                   days={activityDays}
                 />
@@ -1061,15 +1061,15 @@ export default function System() {
               {activityGrids.dsp && (
                 <ActivityGridComponent
                   agentId="DailyStockPick"
-                  repoUrl="https://github.com/victor-brechbill/dailystockpick"
+                  repoUrl="https://github.com/YOUR_ORG/dailystockpick"
                   data={activityGrids.dsp.windows}
                   days={activityDays}
                 />
               )}
               {activityGrids.kernel && (
                 <ActivityGridComponent
-                  agentId="Nova Kernel"
-                  repoUrl="https://github.com/victor-brechbill/nova-kernel"
+                  agentId="Agent Kernel"
+                  repoUrl="https://github.com/YOUR_ORG/agent-kernel"
                   data={activityGrids.kernel.windows}
                   days={activityDays}
                 />
@@ -1327,12 +1327,12 @@ export default function System() {
                   <td>GitHub Repo</td>
                   <td>
                     <a
-                      href="https://github.com/victorbrechbill/nova"
+                      href="https://github.com/YOUR_ORG/agent-dashboard"
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{ color: "#c9a0dc", textDecoration: "underline" }}
                     >
-                      victorbrechbill/nova
+                      YOUR_ORG/agent-dashboard
                     </a>
                   </td>
                 </tr>

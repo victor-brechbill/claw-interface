@@ -1,26 +1,26 @@
-# PRD-001: Nova Dashboard with Kanban Board
+# PRD-001: Agent Dashboard with Kanban Board
 
 ## Overview
 
-A secure web dashboard enabling two-way communication and task management between Victor (product owner) and Nova (AI engineering manager). The first major feature is a Kanban board where Victor can drop tasks into a backlog and Nova can pick them up, work on them, and track progress.
+A secure web dashboard enabling two-way communication and task management between the Owner (product owner) and Agent (AI engineering manager). The first major feature is a Kanban board where the Owner can drop tasks into a backlog and Agent can pick them up, work on them, and track progress.
 
-The dashboard is hosted on Nova's EC2 instance, accessed securely via Cloudflare Tunnel with Zero Trust authentication at `victorbrechbill.com/nova`.
+The dashboard is hosted on the Agent's EC2 instance, accessed securely via Cloudflare Tunnel with Zero Trust authentication at `YOUR_DOMAIN`.
 
 ## User Stories
 
-- As Victor, I want to access a secure dashboard from any browser so I can see what Nova is working on
-- As Victor, I want to create task cards and drop them into a backlog so Nova can pick them up
-- As Victor, I want to see task status at a glance (backlog, in progress, review, done)
-- As Nova, I want to move cards between columns as I work on tasks
-- As Nova, I want to add comments and status updates to cards so Victor stays informed
-- As Victor, I want to assign priority and task type (bugfix, refactor, feature) to cards
-- As Victor/Nova, I want to add comments to cards for async communication about specific tasks
+- As Owner, I want to access a secure dashboard from any browser so I can see what Agent is working on
+- As Owner, I want to create task cards and drop them into a backlog so Agent can pick them up
+- As Owner, I want to see task status at a glance (backlog, in progress, review, done)
+- As Agent, I want to move cards between columns as I work on tasks
+- As Agent, I want to add comments and status updates to cards so Owner stays informed
+- As Owner, I want to assign priority and task type (bugfix, refactor, feature) to cards
+- As Owner/Agent, I want to add comments to cards for async communication about specific tasks
 
 ## Requirements
 
 ### Functional Requirements
 
-1. **Authentication:** Dashboard is only accessible after Cloudflare Zero Trust email verification (Victor's email)
+1. **Authentication:** Dashboard is only accessible after Cloudflare Zero Trust email verification (Owner's email)
 2. **Kanban Board:** Four columns — Backlog, In Progress, Review, Done
 3. **Cards:** Each card has:
    - Title (required)
@@ -29,11 +29,11 @@ The dashboard is hosted on Nova's EC2 instance, accessed securely via Cloudflare
    - Priority: Low | Medium | High | Critical
    - Created date, updated date
    - Comments (list of timestamped text entries)
-   - Assignee (Victor or Nova)
+   - Assignee (Owner or Agent)
 4. **Drag and Drop:** Cards can be dragged between columns
 5. **Card Detail View:** Click a card to see full details, edit, add comments
 6. **Persistence:** All data stored in MongoDB
-7. **API:** RESTful JSON API for all operations (Nova can interact via API too)
+7. **API:** RESTful JSON API for all operations (Agent can interact via API too)
 
 ### Non-Functional Requirements
 
@@ -69,7 +69,7 @@ Card {
   priority:     enum ["low", "medium", "high", "critical"]
   column:       enum ["backlog", "in_progress", "review", "done"]
   position:     int (ordering within column)
-  assignee:     string ("victor" | "nova")
+  assignee:     string ("owner" | "agent")
   comments:     [{
     author:     string
     text:       string
@@ -88,7 +88,7 @@ Card {
 ### UI Approach
 
 - Clean, minimal design
-- Dark mode default (Nova's aesthetic ✨)
+- Dark mode default
 - Color-coded priority badges
 - Type icons (bug 🐛, refactor 🔧, feature ⭐)
 - Responsive columns that stack on mobile
@@ -100,28 +100,28 @@ Card {
 - Node.js 22+ ✅ (installed)
 - Docker ✅ (installed, for MongoDB container)
 - cloudflared ✅ (installed, needs tunnel configuration)
-- Cloudflare account with Zero Trust ⚠️ (Victor needs to set this up)
-- Domain DNS: victorbrechbill.com ⚠️ (needs `nova` subdomain or path routing)
+- Cloudflare account with Zero Trust ⚠️ (Owner needs to set this up)
+- Domain DNS: YOUR_DOMAIN ⚠️ (needs subdomain or path routing)
 
-## Cloudflare Setup Required (Victor)
+## Cloudflare Setup Required (Owner)
 
-Before the dashboard can be accessed externally, Victor needs to:
+Before the dashboard can be accessed externally, the Owner needs to:
 
 1. **Create a Cloudflare Tunnel:**
    - Log into Cloudflare Zero Trust dashboard
-   - Create a tunnel named "nova-dashboard"
+   - Create a tunnel named "agent-dashboard"
    - Install the tunnel connector on EC2 (cloudflared is installed)
-   - Configure the tunnel to route `victorbrechbill.com/nova` → `localhost:3080`
+   - Configure the tunnel to route `YOUR_DOMAIN` → `localhost:3080`
 
 2. **Configure Zero Trust Access Policy:**
-   - Create an Access Application for `victorbrechbill.com/nova`
-   - Set policy: Allow only Victor's email address
+   - Create an Access Application for `YOUR_DOMAIN`
+   - Set policy: Allow only the Owner's email address
    - Choose authentication method (email OTP is simplest)
 
-3. **Share the tunnel token with Nova:**
-   - Nova will run `cloudflared tunnel run` with the token as a systemd service
+3. **Share the tunnel token with the Agent:**
+   - The Agent will run `cloudflared tunnel run` with the token as a systemd service
 
-Alternative: Victor can run `cloudflared tunnel login` on the EC2 instance to authenticate directly.
+Alternative: The Owner can run `cloudflared tunnel login` on the EC2 instance to authenticate directly.
 
 ## Out of Scope (for this PRD)
 
@@ -143,7 +143,7 @@ Alternative: Victor can run `cloudflared tunnel login` on the EC2 instance to au
 - [ ] Comments can be added to cards
 - [ ] Zap logger logs all API requests in structured JSON
 - [ ] No ports are exposed publicly (Cloudflare Tunnel only)
-- [ ] Dashboard loads successfully at victorbrechbill.com/nova after Cloudflare setup
+- [ ] Dashboard loads successfully at YOUR_DOMAIN after Cloudflare setup
 - [ ] Zero Trust auth prevents unauthorized access
 
 ## Technical Approach
@@ -168,7 +168,7 @@ Implement drag-and-drop between columns. Persist column/position changes via API
 Error handling, loading states, responsive design, dark mode styling, structured logging review. Build optimization.
 
 ### Story 6: Cloudflare Tunnel Integration
-Configure cloudflared service, systemd unit file, tunnel routing. Verify end-to-end access via victorbrechbill.com/nova.
+Configure cloudflared service, systemd unit file, tunnel routing. Verify end-to-end access via YOUR_DOMAIN.
 
 ### Story 7: Claude Token Refresh via Dashboard
 Add a self-service UI for refreshing the Anthropic Claude API token without SSH access.
@@ -204,4 +204,4 @@ Add a self-service UI for refreshing the Anthropic Claude API token without SSH 
 
 ---
 
-*Status: DRAFT — Awaiting Victor's approval before implementation begins.*
+*Status: DRAFT — Awaiting the Owner's approval before implementation begins.*

@@ -10,8 +10,6 @@ const navItems: NavItem[] = [
   { path: "/", label: "Status" },
   { path: "/kanban", label: "Tasks" },
   { path: "/briefs", label: "Briefs" },
-  { path: "/stocks", label: "Stocks" },
-  { path: "/social", label: "Social" },
   { path: "/inspect", label: "Inspect" },
   { path: "/system", label: "System" },
 ];
@@ -26,8 +24,8 @@ export default function Navigation() {
     <nav className="app-nav">
       <div className="app-title">
         <h1>
-          <span className="icon">✨</span>
-          Nova
+          <span className="icon">&gt;</span>
+          Agent
         </h1>
       </div>
 

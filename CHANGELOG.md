@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to Nova Dashboard will be documented in this file.
+All notable changes to Agent Dashboard will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -73,7 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **BREAKING:** `agentId` is now required for status updates (no more silent default to "nova")
+- **BREAKING:** `agentId` is now required for status updates (no more silent default to "agent")
 - API returns error if agentId is missing, guiding users to include it
 
 ### Fixed
@@ -99,8 +99,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Flag now auto-clears when Victor approves a card
-- Flag now auto-clears when Victor adds a comment
+- Flag now auto-clears when Owner approves a card
+- Flag now auto-clears when Owner adds a comment
 - Prevents confusion about whether a card is ready for implementation
 
 ## [1.0.1] - 2026-01-30
@@ -118,12 +118,12 @@ Initial versioning system established. This version represents all work complete
 
 - **Kanban Board** — Full task management with backlog, in_progress, review, done columns
 - **Card System** — Comments, attachments, flags, approval workflow
-- **Nova Console** — Real-time status updates from Nova
+- **Agent Console** — Real-time status updates from Agent
 - **System Page** — Activity grid, cron job monitoring, sub-agent status, doctor diagnostics
 - **Stocks Page** — Portfolio tracking with sparkline charts and reference lines
 - **Briefs Page** — Morning brief archive with full detail view
 - **Social Page** — Tommy's social media finds integration
-- **PWA Support** — Installable app with offline capability, custom Nova avatar icon
+- **PWA Support** — Installable app with offline capability, custom avatar icon
 
 ### Technical
 

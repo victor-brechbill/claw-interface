@@ -23,7 +23,7 @@ func NewInspectHandler(logger *zap.Logger) *InspectHandler {
 
 // Allowlisted files only for security
 var allowedFiles = map[string]string{
-	// Nova workspace
+	// Agent workspace
 	"agents":       "/home/ubuntu/clawd/AGENTS.md",
 	"soul":         "/home/ubuntu/clawd/SOUL.md",
 	"tools":        "/home/ubuntu/clawd/TOOLS.md",

@@ -1,8 +1,8 @@
 {
-  "id": "nova-dashboard",
-  "name": "Nova Dashboard",
-  "short_name": "Nova",
-  "description": "Nova Dashboard - Kanban board and system management",
+  "id": "agent-dashboard",
+  "name": "Agent Dashboard",
+  "short_name": "Agent",
+  "description": "Agent Dashboard - Kanban board and system management",
   "scope": "/",
   "start_url": "/",
   "display": "standalone",

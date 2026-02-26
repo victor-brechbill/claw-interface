@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback } from "react";
-import NovaAvatar from "./NovaAvatar";
-import NovaConsole from "./NovaConsole";
+import AgentAvatar from "./AgentAvatar";
+import AgentConsole from "./AgentConsole";
 import SessionsWidget from "./SessionsWidget";
-import type { Expression } from "./NovaAvatar";
+import type { Expression } from "./AgentAvatar";
 import { apiGet } from "../utils/api";
 import { formatTimeAgo } from "../utils/format";
 
@@ -21,7 +21,7 @@ interface AgentsResponse {
   timestamp: string;
 }
 
-type NovaStatus = "online" | "idle" | "sleeping" | "offline";
+type AgentStatus = "online" | "idle" | "sleeping" | "offline";
 
 // Completion messages when transitioning to idle
 const COMPLETION_MESSAGES = [
@@ -34,53 +34,53 @@ const COMPLETION_MESSAGES = [
 
 const StatusDashboard: React.FC = () => {
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
-  const [novaExpression, setNovaExpression] = useState<Expression>("neutral");
-  const [novaStatus, setNovaStatus] = useState<NovaStatus>("offline");
-  const [novaLastActive, setNovaLastActive] = useState<string | null>(null);
+  const [agentExpression, setAgentExpression] = useState<Expression>("neutral");
+  const [agentStatus, setAgentStatus] = useState<AgentStatus>("offline");
+  const [agentLastActive, setAgentLastActive] = useState<string | null>(null);
   const [completionMessage, setCompletionMessage] = useState<string | null>(
     null,
   );
-  const [prevStatus, setPrevStatus] = useState<NovaStatus>("offline");
+  const [prevStatus, setPrevStatus] = useState<AgentStatus>("offline");
 
   const fetchAgents = useCallback(async () => {
     try {
       const data = await apiGet<AgentsResponse>("/api/system/agents");
       setLastUpdate(new Date());
 
-      const novaSession = data.agents?.find(
+      const agentSession = data.agents?.find(
         (a) => a.agentId === "main" || a.sessionKey.includes("main:main"),
       );
 
-      if (novaSession) {
-        setNovaLastActive(novaSession.lastActive);
+      if (agentSession) {
+        setAgentLastActive(agentSession.lastActive);
 
-        if (novaSession.status === "active") {
-          setNovaStatus("online");
-        } else if (novaSession.status === "idle") {
-          setNovaStatus("idle");
+        if (agentSession.status === "active") {
+          setAgentStatus("online");
+        } else if (agentSession.status === "idle") {
+          setAgentStatus("idle");
         } else {
-          setNovaStatus("sleeping");
+          setAgentStatus("sleeping");
         }
 
-        if (novaSession.expression) {
-          setNovaExpression(novaSession.expression as Expression);
+        if (agentSession.expression) {
+          setAgentExpression(agentSession.expression as Expression);
         } else {
-          if (novaSession.status === "active") {
-            setNovaExpression("neutral");
-          } else if (novaSession.status === "idle") {
-            setNovaExpression("neutral");
+          if (agentSession.status === "active") {
+            setAgentExpression("neutral");
+          } else if (agentSession.status === "idle") {
+            setAgentExpression("neutral");
           } else {
-            setNovaExpression("sleepy");
+            setAgentExpression("sleepy");
           }
         }
       } else {
-        setNovaStatus("sleeping");
-        setNovaExpression("sleepy");
+        setAgentStatus("sleeping");
+        setAgentExpression("sleepy");
       }
     } catch (err) {
       console.error("Failed to fetch agents:", err);
-      setNovaStatus("offline");
-      setNovaExpression("curious");
+      setAgentStatus("offline");
+      setAgentExpression("curious");
     }
   }, []);
 
@@ -91,11 +91,11 @@ const StatusDashboard: React.FC = () => {
     return () => clearInterval(interval);
   }, [fetchAgents]);
 
-  // Show completion message when Nova transitions from online → idle/sleeping
+  // Show completion message when Agent transitions from online → idle/sleeping
   useEffect(() => {
     if (
       prevStatus === "online" &&
-      (novaStatus === "idle" || novaStatus === "sleeping")
+      (agentStatus === "idle" || agentStatus === "sleeping")
     ) {
       const msg =
         COMPLETION_MESSAGES[
@@ -106,8 +106,8 @@ const StatusDashboard: React.FC = () => {
       const timeout = setTimeout(() => setCompletionMessage(null), 5000);
       return () => clearTimeout(timeout);
     }
-    setPrevStatus(novaStatus);
-  }, [novaStatus, prevStatus]);
+    setPrevStatus(agentStatus);
+  }, [agentStatus, prevStatus]);
 
   return (
     <div className="status-dashboard">
@@ -124,12 +124,12 @@ const StatusDashboard: React.FC = () => {
         </p>
       </div>
 
-      <div className="nova-avatar-container">
-        <NovaAvatar width={400} height={400} expression={novaExpression} />
+      <div className="agent-avatar-container">
+        <AgentAvatar width={400} height={400} expression={agentExpression} />
 
-        <NovaConsole
-          status={novaStatus}
-          lastActive={novaLastActive}
+        <AgentConsole
+          status={agentStatus}
+          lastActive={agentLastActive}
           completionMessage={completionMessage}
         />
 
@@ -172,7 +172,7 @@ const StatusDashboard: React.FC = () => {
           opacity: 0.7;
         }
 
-        .nova-avatar-container {
+        .agent-avatar-container {
           margin: 1rem auto;
           padding: 1.5rem;
           background: radial-gradient(circle at center, rgba(64, 224, 208, 0.03) 0%, transparent 70%);
@@ -185,7 +185,7 @@ const StatusDashboard: React.FC = () => {
           align-items: center;
         }
 
-        .nova-avatar-container canvas {
+        .agent-avatar-container canvas {
           width: 100% !important;
           height: auto !important;
           max-width: 100%;
@@ -206,14 +206,14 @@ const StatusDashboard: React.FC = () => {
             font-size: 1.8rem;
           }
 
-          .nova-avatar-container {
+          .agent-avatar-container {
             padding: 1rem;
             margin: 0.5rem 0 1.5rem;
           }
         }
 
         @media (max-width: 640px) {
-          .nova-avatar-container canvas {
+          .agent-avatar-container canvas {
             width: 280px !important;
             height: 280px !important;
           }

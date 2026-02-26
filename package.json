@@ -1,7 +1,7 @@
 {
-  "name": "nova-dashboard",
+  "name": "agent-dashboard",
   "private": true,
-  "description": "Nova Dashboard - monorepo root for development tooling",
+  "description": "Agent Dashboard - monorepo root for development tooling",
   "scripts": {
     "prepare": "husky",
     "lint": "cd frontend && npm run lint",

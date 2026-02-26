@@ -69,10 +69,10 @@ check_health() {
 check_docker() {
     echo -e "\n${BLUE}=== Docker Containers ===${NC}"
     
-    if sg docker -c "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}' | grep nova" 2>/dev/null; then
-        success "Nova containers found"
+    if sg docker -c "docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}' | grep agent" 2>/dev/null; then
+        success "Agent containers found"
     else
-        warning "No Nova containers found"
+        warning "No Agent containers found"
     fi
 }
 
@@ -80,34 +80,34 @@ check_docker() {
 check_files() {
     echo -e "\n${BLUE}=== File Structure ===${NC}"
     
-    if [[ -f ~/nova-dashboard/nova-dashboard ]]; then
+    if [[ -f ~/agent-dashboard/agent-dashboard ]]; then
         success "Production binary exists"
     else
-        error "Production binary not found at ~/nova-dashboard/nova-dashboard"
+        error "Production binary not found at ~/agent-dashboard/agent-dashboard"
     fi
     
-    if [[ -d ~/nova-dashboard/frontend ]]; then
+    if [[ -d ~/agent-dashboard/frontend ]]; then
         success "Production frontend exists"
     else
-        error "Production frontend not found at ~/nova-dashboard/frontend"
+        error "Production frontend not found at ~/agent-dashboard/frontend"
     fi
     
-    if [[ -f ~/nova-dashboard/config/prod.env ]]; then
+    if [[ -f ~/agent-dashboard/config/prod.env ]]; then
         success "Production config exists"
         echo "Config contents:"
-        cat ~/nova-dashboard/config/prod.env | sed 's/^/  /'
+        cat ~/agent-dashboard/config/prod.env | sed 's/^/  /'
     else
-        error "Production config not found at ~/nova-dashboard/config/prod.env"
+        error "Production config not found at ~/agent-dashboard/config/prod.env"
     fi
 }
 
 # Main status check
 main() {
-    log "Nova Dashboard System Status Check"
+    log "Agent Dashboard System Status Check"
     
     # Check systemd services
-    check_service "nova-mongo.service" "MongoDB Service"
-    check_service "nova-dashboard.service" "Dashboard Service"
+    check_service "agent-mongo.service" "MongoDB Service"
+    check_service "agent-dashboard.service" "Dashboard Service"
     check_service "cloudflared.service" "Cloudflare Tunnel"
     
     # Check Docker containers
@@ -127,9 +127,9 @@ main() {
     
     # Check tunnel endpoint if possible
     echo -e "\n${BLUE}=== External Connectivity ===${NC}"
-    if curl -f -s -k "https://nova.victorbrechbill.com/api/health" >/dev/null 2>&1; then
+    if curl -f -s -k "https://YOUR_DOMAIN/api/health" >/dev/null 2>&1; then
         success "External tunnel health check passed"
-        curl -s -k "https://nova.victorbrechbill.com/api/health" | jq . 2>/dev/null || curl -s -k "https://nova.victorbrechbill.com/api/health"
+        curl -s -k "https://YOUR_DOMAIN/api/health" | jq . 2>/dev/null || curl -s -k "https://YOUR_DOMAIN/api/health"
     else
         warning "External tunnel health check failed (may be normal if tunnel is down)"
     fi
@@ -143,8 +143,8 @@ case "${1:-status}" in
         main
         ;;
     services)
-        check_service "nova-mongo.service" "MongoDB Service"
-        check_service "nova-dashboard.service" "Dashboard Service"
+        check_service "agent-mongo.service" "MongoDB Service"
+        check_service "agent-dashboard.service" "Dashboard Service"
         check_service "cloudflared.service" "Cloudflare Tunnel"
         ;;
     docker)
@@ -158,7 +158,7 @@ case "${1:-status}" in
         ;;
     logs)
         echo "Recent logs:"
-        journalctl --user -u nova-dashboard.service --since "10 minutes ago" --no-pager -l
+        journalctl --user -u agent-dashboard.service --since "10 minutes ago" --no-pager -l
         ;;
     help)
         echo "Usage: $0 [option]"

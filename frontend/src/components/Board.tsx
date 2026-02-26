@@ -285,7 +285,7 @@ export default function Board() {
     <>
       <div className="board-toolbar">
         <div className="board-toolbar-left">
-          {/* Updated indicator removed per Victor's request */}
+          {/* Updated indicator removed per owner's request */}
         </div>
         <div className="board-toolbar-right">
           {reordering && <span className="reorder-indicator">Saving...</span>}

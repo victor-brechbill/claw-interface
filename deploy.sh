@@ -10,8 +10,8 @@ NC='\033[0m' # No Color
 
 # Directory paths
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DEPLOY_DIR="$HOME/nova-dashboard"
-BINARY_NAME="nova-dashboard"
+DEPLOY_DIR="$HOME/agent-dashboard"
+BINARY_NAME="agent-dashboard"
 
 # Logging function
 log() {
@@ -117,9 +117,9 @@ deploy_files() {
         warn "prod.env missing! Creating default..."
         cat > "$DEPLOY_DIR/config/prod.env" << 'ENVEOF'
 DASHBOARD_PORT=3080
-FRONTEND_DIR=/home/ubuntu/nova-dashboard/frontend
+FRONTEND_DIR=/home/ubuntu/agent-dashboard/frontend
 MONGO_URI=mongodb://localhost:27018
-MONGO_DATABASE=nova_dashboard_prod
+MONGO_DATABASE=agent_dashboard_prod
 ENVEOF
     fi
     
@@ -147,9 +147,9 @@ ensure_mongo() {
     cd "$REPO_DIR"
     
     # Check if container is running
-    if ! sg docker -c "docker ps --format 'table {{.Names}}' | grep -q nova-mongo-prod"; then
+    if ! sg docker -c "docker ps --format 'table {{.Names}}' | grep -q agent-mongo-prod"; then
         log "Starting MongoDB container..."
-        sg docker -c "docker compose -f docker-compose.prod.yml up -d nova-mongo-prod"
+        sg docker -c "docker compose -f docker-compose.prod.yml up -d agent-mongo-prod"
         
         # Wait for MongoDB to be ready
         log "Waiting for MongoDB to be ready..."
@@ -169,7 +169,7 @@ restart_service() {
     systemctl --user daemon-reload
     
     # Restart the service
-    systemctl --user restart nova-dashboard.service
+    systemctl --user restart agent-dashboard.service
     
     success "Service restarted"
 }
@@ -199,7 +199,7 @@ health_check() {
 
 # Main deployment flow
 main() {
-    log "Starting Nova Dashboard deployment..."
+    log "Starting Agent Dashboard deployment..."
     
     check_requirements
     build_backend
@@ -211,7 +211,7 @@ main() {
     health_check
     
     success "🚀 Deployment completed successfully!"
-    log "Nova Dashboard is now running at: http://localhost:3080"
+    log "Agent Dashboard is now running at: http://localhost:3080"
 }
 
 # Run main function

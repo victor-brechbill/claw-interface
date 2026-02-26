@@ -33,10 +33,10 @@ error() {
 export_dev_env() {
     log "Setting up development environment..."
     
-    export NOVA_ENV=development
+    export DASHBOARD_ENV=development
     export DASHBOARD_PORT=3081
     export MONGO_URI=mongodb://localhost:27017
-    export MONGO_DATABASE=nova_dashboard_dev
+    export MONGO_DATABASE=agent_dashboard_dev
     export FRONTEND_DIR="$REPO_DIR/frontend/dist"
     export LOG_DIR="$REPO_DIR/logs"
     
@@ -74,15 +74,15 @@ run_backend() {
     export PATH="$PATH:/snap/bin"
     
     # Build and run
-    go build -o nova-dashboard-dev .
+    go build -o agent-dashboard-dev .
     
-    log "Starting Nova Dashboard backend..."
+    log "Starting Agent Dashboard backend..."
     log "Backend will be available at: http://localhost:$DASHBOARD_PORT"
     log "API health check: http://localhost:$DASHBOARD_PORT/api/health"
     log ""
     log "Press Ctrl+C to stop"
     
-    exec ./nova-dashboard-dev
+    exec ./agent-dashboard-dev
 }
 
 # Run frontend in development mode (separate terminal)
@@ -134,11 +134,11 @@ run_full() {
     # Build backend first
     cd "$REPO_DIR/backend"
     export PATH="$PATH:/snap/bin"
-    go build -o nova-dashboard-dev .
+    go build -o agent-dashboard-dev .
     
     # Start backend in background
     log "Backend starting on port $DASHBOARD_PORT..."
-    ./nova-dashboard-dev &
+    ./agent-dashboard-dev &
     BACKEND_PID=$!
     
     # Wait a moment for backend to start

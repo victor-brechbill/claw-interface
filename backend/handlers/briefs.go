@@ -10,7 +10,7 @@ import (
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 	"go.uber.org/zap"
 
-	"nova-dashboard/models"
+	"agent-dashboard/models"
 )
 
 type BriefsHandler struct {

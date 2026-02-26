@@ -39,7 +39,7 @@ func Disconnect(ctx context.Context, client *mongo.Client) error {
 func CardsCollection(client *mongo.Client) *mongo.Collection {
 	database := os.Getenv("MONGO_DATABASE")
 	if database == "" {
-		database = "nova-dashboard" // backward compatibility
+		database = "agent-dashboard" // backward compatibility
 	}
 	return client.Database(database).Collection("cards")
 }
@@ -47,7 +47,7 @@ func CardsCollection(client *mongo.Client) *mongo.Collection {
 func StockWatchlistCollection(client *mongo.Client) *mongo.Collection {
 	database := os.Getenv("MONGO_DATABASE")
 	if database == "" {
-		database = "nova-dashboard"
+		database = "agent-dashboard"
 	}
 	return client.Database(database).Collection("stock_watchlist")
 }
@@ -55,7 +55,7 @@ func StockWatchlistCollection(client *mongo.Client) *mongo.Collection {
 func DoctorReportsCollection(client *mongo.Client) *mongo.Collection {
 	database := os.Getenv("MONGO_DATABASE")
 	if database == "" {
-		database = "nova-dashboard"
+		database = "agent-dashboard"
 	}
 	return client.Database(database).Collection("doctor_reports")
 }
@@ -63,7 +63,7 @@ func DoctorReportsCollection(client *mongo.Client) *mongo.Collection {
 func MorningBriefsCollection(client *mongo.Client) *mongo.Collection {
 	database := os.Getenv("MONGO_DATABASE")
 	if database == "" {
-		database = "nova-dashboard"
+		database = "agent-dashboard"
 	}
 	return client.Database(database).Collection("morning_briefs")
 }
@@ -71,7 +71,7 @@ func MorningBriefsCollection(client *mongo.Client) *mongo.Collection {
 func Database(client *mongo.Client) *mongo.Database {
 	database := os.Getenv("MONGO_DATABASE")
 	if database == "" {
-		database = "nova-dashboard"
+		database = "agent-dashboard"
 	}
 	return client.Database(database)
 }
@@ -79,7 +79,7 @@ func Database(client *mongo.Client) *mongo.Database {
 func TommyFindsCollection(client *mongo.Client) *mongo.Collection {
 	database := os.Getenv("MONGO_DATABASE")
 	if database == "" {
-		database = "nova-dashboard"
+		database = "agent-dashboard"
 	}
 	return client.Database(database).Collection("tommy_finds")
 }
@@ -87,7 +87,7 @@ func TommyFindsCollection(client *mongo.Client) *mongo.Collection {
 func TommySessionsCollection(client *mongo.Client) *mongo.Collection {
 	database := os.Getenv("MONGO_DATABASE")
 	if database == "" {
-		database = "nova-dashboard"
+		database = "agent-dashboard"
 	}
 	return client.Database(database).Collection("tommy_sessions")
 }
@@ -95,7 +95,7 @@ func TommySessionsCollection(client *mongo.Client) *mongo.Collection {
 func NSTestRunsCollection(client *mongo.Client) *mongo.Collection {
 	database := os.Getenv("MONGO_DATABASE")
 	if database == "" {
-		database = "nova-dashboard"
+		database = "agent-dashboard"
 	}
 	return client.Database(database).Collection("ns_test_runs")
 }
@@ -103,7 +103,7 @@ func NSTestRunsCollection(client *mongo.Client) *mongo.Collection {
 func NSTestCoverageCollection(client *mongo.Client) *mongo.Collection {
 	database := os.Getenv("MONGO_DATABASE")
 	if database == "" {
-		database = "nova-dashboard"
+		database = "agent-dashboard"
 	}
 	return client.Database(database).Collection("ns_test_coverage")
 }
@@ -111,7 +111,7 @@ func NSTestCoverageCollection(client *mongo.Client) *mongo.Collection {
 func TommyPostsCollection(client *mongo.Client) *mongo.Collection {
 	database := os.Getenv("MONGO_DATABASE")
 	if database == "" {
-		database = "nova-dashboard"
+		database = "agent-dashboard"
 	}
 	return client.Database(database).Collection("tommy_posts")
 }
@@ -119,7 +119,7 @@ func TommyPostsCollection(client *mongo.Client) *mongo.Collection {
 func AutonomousLogCollection(client *mongo.Client) *mongo.Collection {
 	database := os.Getenv("MONGO_DATABASE")
 	if database == "" {
-		database = "nova-dashboard"
+		database = "agent-dashboard"
 	}
 	return client.Database(database).Collection("autonomous_log")
 }
@@ -127,7 +127,7 @@ func AutonomousLogCollection(client *mongo.Client) *mongo.Collection {
 func TommyConfigCollection(client *mongo.Client) *mongo.Collection {
 	database := os.Getenv("MONGO_DATABASE")
 	if database == "" {
-		database = "nova-dashboard"
+		database = "agent-dashboard"
 	}
 	return client.Database(database).Collection("tommy_config")
 }

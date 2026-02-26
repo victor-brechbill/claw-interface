@@ -1,19 +1,19 @@
 version: '3.8'
 
 services:
-  nova-mongo-prod:
+  agent-mongo-prod:
     image: mongo:7
-    container_name: nova-mongo-prod
+    container_name: agent-mongo-prod
     restart: always
     ports:
       - "27018:27017"
     volumes:
-      - nova-mongo-prod-data:/data/db
+      - agent-mongo-prod-data:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=
       - MONGO_INITDB_ROOT_PASSWORD=
     command: ["mongod", "--bind_ip_all"]
 
 volumes:
-  nova-mongo-prod-data:
+  agent-mongo-prod-data:
     external: false
