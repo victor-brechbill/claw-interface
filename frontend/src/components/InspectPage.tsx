@@ -159,28 +159,34 @@ export default function InspectPage() {
     });
   };
 
-  const loadFile = async (fileName: string) => {
-    if (isDirty && !window.confirm("You have unsaved changes. Discard them?")) {
-      return;
-    }
-    setIsEditing(false);
-    setIsDirty(false);
-    setEditContent("");
-    setLoading(true);
-    setError("");
-    setActiveItem(fileName);
-    try {
-      const fileData = await apiGet<FileContent>(`/api/inspect/${fileName}`);
-      setContent(fileData.content || "File is empty");
-    } catch (err) {
-      setError(
-        `Failed to load ${fileName}: ${err instanceof Error ? err.message : "Unknown error"}`,
-      );
-      setContent("");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const loadFile = useCallback(
+    async (fileName: string) => {
+      if (
+        isDirty &&
+        !window.confirm("You have unsaved changes. Discard them?")
+      ) {
+        return;
+      }
+      setIsEditing(false);
+      setIsDirty(false);
+      setEditContent("");
+      setLoading(true);
+      setError("");
+      setActiveItem(fileName);
+      try {
+        const fileData = await apiGet<FileContent>(`/api/inspect/${fileName}`);
+        setContent(fileData.content || "File is empty");
+      } catch (err) {
+        setError(
+          `Failed to load ${fileName}: ${err instanceof Error ? err.message : "Unknown error"}`,
+        );
+        setContent("");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [isDirty],
+  );
 
   const enterEditMode = () => {
     if (loading || error || !content) return;
@@ -189,16 +195,16 @@ export default function InspectPage() {
     setIsDirty(false);
   };
 
-  const cancelEdit = () => {
+  const cancelEdit = useCallback(() => {
     if (isDirty && !window.confirm("You have unsaved changes. Discard them?")) {
       return;
     }
     setIsEditing(false);
     setIsDirty(false);
     setEditContent("");
-  };
+  }, [isDirty]);
 
-  const saveFile = async () => {
+  const saveFile = useCallback(async () => {
     if (!activeItem || saving) return;
     setSaving(true);
     try {
@@ -216,7 +222,7 @@ export default function InspectPage() {
     } finally {
       setSaving(false);
     }
-  };
+  }, [activeItem, saving, editContent, notify]);
 
   const handleItemClick = (item: TreeItemConfig) => {
     loadFile(item.id);
@@ -295,7 +301,7 @@ export default function InspectPage() {
       );
       if (item) loadFile(item.id);
     }
-  }, [searchParams]);
+  }, [searchParams, loadFile]);
 
   const addLineNumbers = (text: string): string => {
     const lines = text.split("\n");
