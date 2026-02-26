@@ -26,76 +26,23 @@ interface TreeSectionConfig {
 
 const TREE_SECTIONS: TreeSectionConfig[] = [
   {
-    id: "workspace",
-    title: "Agent",
+    id: "kernel",
+    title: "Kernel",
     icon: ">",
     items: [
       { id: "agents", label: "AGENTS.md", type: "file" },
-      { id: "soul", label: "SOUL.md", type: "file" },
       { id: "tools", label: "TOOLS.md", type: "file" },
-      { id: "user", label: "USER.md", type: "file" },
-      { id: "identity", label: "IDENTITY.md", type: "file" },
       { id: "heartbeat", label: "HEARTBEAT.md", type: "file" },
-      { id: "memory", label: "MEMORY.md", type: "file" },
+      { id: "soul", label: "SOUL.md", type: "file" },
+      { id: "identity", label: "IDENTITY.md", type: "file" },
+      { id: "user", label: "USER.md", type: "file" },
     ],
   },
   {
-    id: "developer",
-    title: "Developer",
-    icon: "💻",
-    items: [{ id: "dev-agents", label: "AGENTS.md", type: "file" }],
-  },
-  {
-    id: "code-reviewer",
-    title: "Code Reviewer",
-    icon: "🔍",
-    items: [{ id: "reviewer-agents", label: "AGENTS.md", type: "file" }],
-  },
-  {
-    id: "tommy",
-    title: "Tommy",
-    icon: "🐕",
-    items: [
-      { id: "tommy-agents", label: "AGENTS.md", type: "file" },
-      { id: "tommy-soul", label: "SOUL.md", type: "file" },
-      { id: "tommy-tools", label: "TOOLS.md", type: "file" },
-      { id: "tommy-identity", label: "IDENTITY.md", type: "file" },
-      { id: "tommy-wins", label: "wins.md", type: "file" },
-      { id: "tommy-voice-examples", label: "voice-examples.md", type: "file" },
-      {
-        id: "tommy-market-prompt",
-        label: "Market Session Prompt",
-        type: "file",
-      },
-      {
-        id: "tommy-explore-prompt",
-        label: "Explore Session Prompt",
-        type: "file",
-      },
-      {
-        id: "tommy-hottake-prompt",
-        label: "Hot Take Session Prompt",
-        type: "file",
-      },
-    ],
-  },
-  {
-    id: "ns-testing",
-    title: "NS Testers",
-    icon: "🧪",
-    items: [
-      { id: "ns-testing-agents", label: "AGENTS.md", type: "file" },
-      { id: "ns-testing-prompt", label: "Daily Testing Prompt", type: "file" },
-    ],
-  },
-  {
-    id: "project",
-    title: "Project",
-    icon: "📂",
-    items: [
-      { id: "architecture", label: "ARCHITECTURE.md", type: "file" },
-      { id: "sessions", label: "SESSIONS.md", type: "file" },
-    ],
+    id: "memory",
+    title: "Memory",
+    icon: ">",
+    items: [{ id: "memory", label: "MEMORY.md", type: "file" }],
   },
 ];
 
