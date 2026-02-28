@@ -18,7 +18,7 @@ export interface Card {
   title: string;
   description: string;
   type: "feature" | "bugfix" | "task" | "refactor" | "infrastructure" | "cron";
-  project?: "none" | "dashboard" | "neighborhood-share" | "daily-stock-pick";
+  project?: string;
   priority: "low" | "medium" | "high" | "critical";
   column: "backlog" | "in_progress" | "review" | "done";
   position: number;

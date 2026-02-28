@@ -222,6 +222,18 @@ interface DomainSSLInfo {
   timestamp: string;
 }
 
+// Parse VITE_REPOS env var: "Label:owner/repo,Label2:owner2/repo2"
+const repoConfig = (import.meta.env.VITE_REPOS || "")
+  .split(",")
+  .map((entry: string) => entry.trim())
+  .filter(Boolean)
+  .map((entry: string) => {
+    const [label, path] = entry.includes(":")
+      ? entry.split(":", 2)
+      : [entry.split("/").pop() || entry, entry];
+    return { key: label.toLowerCase().replace(/\s+/g, "-"), label, path };
+  });
+
 // ActivityGrid component for GitHub contribution style display
 function ActivityGridComponent({
   agentId,
@@ -312,12 +324,9 @@ export default function System() {
   const [stats, setStats] = useState<SystemStats>({});
   const [peakMetrics, setPeakMetrics] = useState<PeakMetrics | null>(null);
   const [cronHistory, setCronHistory] = useState<CronHistory | null>(null);
-  const [activityGrids, setActivityGrids] = useState<{
-    dashboard?: ActivityGrid;
-    ns?: ActivityGrid;
-    dsp?: ActivityGrid;
-    kernel?: ActivityGrid;
-  }>({});
+  const [activityGrids, setActivityGrids] = useState<
+    Record<string, ActivityGrid>
+  >({});
   const [doctorStatus, setDoctorStatus] = useState<DoctorStatus | null>(null);
   const [kernelInfo, setKernelInfo] = useState<KernelInfo | null>(null);
   const [configInfo, setConfigInfo] = useState<ConfigInfo | null>(null);
@@ -396,12 +405,7 @@ export default function System() {
 
   const loadActivityGrids = useCallback(async () => {
     try {
-      const repos = [
-        { key: "dashboard", path: "YOUR_ORG/agent-dashboard" },
-        { key: "ns", path: "YOUR_ORG/neighborhood-share" },
-        { key: "dsp", path: "YOUR_ORG/dailystockpick" },
-        { key: "kernel", path: "YOUR_ORG/agent-kernel" },
-      ];
+      const repos = repoConfig;
       const grids: Record<string, ActivityGrid> = {};
 
       for (const repo of repos) {
@@ -1042,37 +1046,17 @@ export default function System() {
           <h3 className="bios-section-header">REPO ACTIVITY</h3>
           <div className="bios-section-content">
             <div className="activity-grid-container">
-              {activityGrids.dashboard && (
-                <ActivityGridComponent
-                  agentId="Dashboard"
-                  repoUrl="https://github.com/YOUR_ORG/agent-dashboard"
-                  data={activityGrids.dashboard.windows}
-                  days={activityDays}
-                />
-              )}
-              {activityGrids.ns && (
-                <ActivityGridComponent
-                  agentId="NeighborhoodShare"
-                  repoUrl="https://github.com/YOUR_ORG/neighborhood-share"
-                  data={activityGrids.ns.windows}
-                  days={activityDays}
-                />
-              )}
-              {activityGrids.dsp && (
-                <ActivityGridComponent
-                  agentId="DailyStockPick"
-                  repoUrl="https://github.com/YOUR_ORG/dailystockpick"
-                  data={activityGrids.dsp.windows}
-                  days={activityDays}
-                />
-              )}
-              {activityGrids.kernel && (
-                <ActivityGridComponent
-                  agentId="Agent Kernel"
-                  repoUrl="https://github.com/YOUR_ORG/agent-kernel"
-                  data={activityGrids.kernel.windows}
-                  days={activityDays}
-                />
+              {repoConfig.map(
+                (repo) =>
+                  activityGrids[repo.key] && (
+                    <ActivityGridComponent
+                      key={repo.key}
+                      agentId={repo.label}
+                      repoUrl={`https://github.com/${repo.path}`}
+                      data={activityGrids[repo.key].windows}
+                      days={activityDays}
+                    />
+                  ),
               )}
             </div>
           </div>
@@ -1323,19 +1307,29 @@ export default function System() {
                   <td>Version</td>
                   <td>v{__APP_VERSION__}</td>
                 </tr>
-                <tr>
-                  <td>GitHub Repo</td>
-                  <td>
-                    <a
-                      href="https://github.com/YOUR_ORG/agent-dashboard"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ color: "#c9a0dc", textDecoration: "underline" }}
-                    >
-                      YOUR_ORG/agent-dashboard
-                    </a>
-                  </td>
-                </tr>
+                {repoConfig.length > 0 && (
+                  <tr>
+                    <td>GitHub Repos</td>
+                    <td>
+                      {repoConfig.map((repo, i) => (
+                        <span key={repo.key}>
+                          {i > 0 && ", "}
+                          <a
+                            href={`https://github.com/${repo.path}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              color: "#c9a0dc",
+                              textDecoration: "underline",
+                            }}
+                          >
+                            {repo.path}
+                          </a>
+                        </span>
+                      ))}
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
 
