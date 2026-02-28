@@ -27,3 +27,4 @@
 - `MONGO_URI` — MongoDB connection string
 - `MONGO_DATABASE` — Database name (default: `agent-dashboard`)
 - `DASHBOARD_PORT` — Server port (default: `3080`)
+- `VITE_REPOS` — Comma-separated list of repos for System page activity grids. Format: `Label:owner/repo,Label2:owner2/repo2` (e.g. `Dashboard:myorg/dashboard,API:myorg/api`)

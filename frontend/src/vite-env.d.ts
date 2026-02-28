@@ -1,5 +1,13 @@
 /// <reference types="vite/client" />
 
+interface ImportMetaEnv {
+  readonly VITE_REPOS: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+
 // PWA virtual module types
 declare module "virtual:pwa-register" {
   export interface RegisterSWOptions {

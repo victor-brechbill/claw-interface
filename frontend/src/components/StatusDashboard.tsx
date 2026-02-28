@@ -1,8 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
-import AgentAvatar from "./AgentAvatar";
 import AgentConsole from "./AgentConsole";
 import SessionsWidget from "./SessionsWidget";
-import type { Expression } from "./AgentAvatar";
 import { apiGet } from "../utils/api";
 import { formatTimeAgo } from "../utils/format";
 
@@ -25,16 +23,15 @@ type AgentStatus = "online" | "idle" | "sleeping" | "offline";
 
 // Completion messages when transitioning to idle
 const COMPLETION_MESSAGES = [
-  "Beamed down",
-  "Achieved Orbit",
-  "Emerged from hyperspace",
+  "Task Complete",
+  "All Clear",
+  "Standing By",
   "Systems Nominal",
   "Mission Complete",
 ];
 
 const StatusDashboard: React.FC = () => {
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
-  const [agentExpression, setAgentExpression] = useState<Expression>("neutral");
   const [agentStatus, setAgentStatus] = useState<AgentStatus>("offline");
   const [agentLastActive, setAgentLastActive] = useState<string | null>(null);
   const [completionMessage, setCompletionMessage] = useState<string | null>(
@@ -61,26 +58,12 @@ const StatusDashboard: React.FC = () => {
         } else {
           setAgentStatus("sleeping");
         }
-
-        if (agentSession.expression) {
-          setAgentExpression(agentSession.expression as Expression);
-        } else {
-          if (agentSession.status === "active") {
-            setAgentExpression("neutral");
-          } else if (agentSession.status === "idle") {
-            setAgentExpression("neutral");
-          } else {
-            setAgentExpression("sleepy");
-          }
-        }
       } else {
         setAgentStatus("sleeping");
-        setAgentExpression("sleepy");
       }
     } catch (err) {
       console.error("Failed to fetch agents:", err);
       setAgentStatus("offline");
-      setAgentExpression("curious");
     }
   }, []);
 
@@ -125,8 +108,6 @@ const StatusDashboard: React.FC = () => {
       </div>
 
       <div className="agent-avatar-container">
-        <AgentAvatar width={400} height={400} expression={agentExpression} />
-
         <AgentConsole
           status={agentStatus}
           lastActive={agentLastActive}
@@ -185,12 +166,6 @@ const StatusDashboard: React.FC = () => {
           align-items: center;
         }
 
-        .agent-avatar-container canvas {
-          width: 100% !important;
-          height: auto !important;
-          max-width: 100%;
-        }
-
         .agents-console-section {
           width: 100%;
           max-width: 1000px;
@@ -212,12 +187,6 @@ const StatusDashboard: React.FC = () => {
           }
         }
 
-        @media (max-width: 640px) {
-          .agent-avatar-container canvas {
-            width: 280px !important;
-            height: 280px !important;
-          }
-        }
       `}</style>
     </div>
   );

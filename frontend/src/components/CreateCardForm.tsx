@@ -130,15 +130,12 @@ export default function CreateCardForm({ onCreated, onCancel }: Props) {
           <div className="form-row">
             <label>
               Project
-              <select
+              <input
+                type="text"
                 value={formData.project}
                 onChange={(e) => updateFormData("project", e.target.value)}
-              >
-                <option value="none">None</option>
-                <option value="dashboard">Dashboard</option>
-                <option value="neighborhood-share">Neighborhood Share</option>
-                <option value="daily-stock-pick">Daily Stock Pick</option>
-              </select>
+                placeholder="none"
+              />
             </label>
           </div>
           <div className="form-row">

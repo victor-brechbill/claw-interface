@@ -47,7 +47,6 @@ type Card struct {
 
 var (
 	validTypes      = map[string]bool{"bugfix": true, "refactor": true, "feature": true, "task": true, "infrastructure": true, "cron": true}
-	validProjects   = map[string]bool{"none": true, "dashboard": true, "neighborhood-share": true, "daily-stock-pick": true}
 	validPriorities = map[string]bool{"low": true, "medium": true, "high": true, "critical": true}
 	validColumns    = map[string]bool{"backlog": true, "in_progress": true, "review": true, "done": true}
 )
@@ -58,9 +57,6 @@ func (c *Card) Validate() error {
 	}
 	if !validTypes[c.Type] {
 		return fmt.Errorf("type must be one of: bugfix, refactor, feature, task, infrastructure, cron")
-	}
-	if c.Project != "" && !validProjects[c.Project] {
-		return fmt.Errorf("project must be one of: none, dashboard, neighborhood-share, daily-stock-pick")
 	}
 	if !validPriorities[c.Priority] {
 		return fmt.Errorf("priority must be one of: low, medium, high, critical")
