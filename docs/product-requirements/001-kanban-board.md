@@ -82,6 +82,36 @@ The Kanban board is the core task management interface for Claw Interface. It en
 - **Security:** No public ports — all traffic via Cloudflare Tunnel with Zero Trust authentication
 - **API:** RESTful JSON on `/api/cards` with full CRUD + comments + attachments + reorder
 
+## Requirements
+
+### Card Management
+
+**[PRD-001-R01]** The system MUST support creating, editing, and deleting task cards with markdown descriptions.
+**[PRD-001-R02]** The system MUST support card types: bugfix, refactor, feature, task, infrastructure, cron.
+**[PRD-001-R03]** The system MUST support priority levels: low, medium, high, critical.
+**[PRD-001-R04]** The system MUST auto-assign sequential card numbers via auto-incrementing counter.
+**[PRD-001-R05]** The system MUST support only PUT (full replace) for card updates — no PATCH endpoint.
+
+### Board Functionality
+
+**[PRD-001-R06]** The system MUST support four columns: Backlog, In Progress, Review, Done.
+**[PRD-001-R07]** The system MUST support drag-and-drop between columns with batch reorder API.
+**[PRD-001-R08]** The system MUST support filtering by column, type, and priority.
+
+### Approval Workflow
+
+**[PRD-001-R09]** The system MUST support card approval and flagging with audit trail.
+**[PRD-001-R10]** The system MUST auto-clear approval when description changes (via MD5 hash comparison).
+
+### Comments & Attachments
+
+**[PRD-001-R11]** The system MUST support timestamped comment threads on each card.
+**[PRD-001-R12]** The system MUST support file attachments with upload, download, and delete per card.
+
+### Security
+
+**[PRD-001-R13]** The system MUST NOT expose public ports — all traffic MUST route via Cloudflare Tunnel with Zero Trust authentication.
+
 ## Current State
 
 Fully implemented. The kanban board is the primary interface, identical in functionality to the Nova Dashboard version but without Victor-specific customizations.
