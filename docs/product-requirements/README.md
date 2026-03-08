@@ -1,30 +1,51 @@
-# Product Requirements
+# Product Requirements Documentation
 
-This folder contains Product Requirement Documents (PRDs) for the Claw Interface.
+This folder contains product requirement documents (PRDs) that guide development decisions.
 
-PRDs describe **what** the system does and **why** — they're permanent reference docs covering architecture, features, and design decisions. For development workflow and conventions, see `CLAUDE.md`.
+## Purpose
 
-## Documents
+PRDs are **enforceable specifications**, not just documentation. Any code change that violates, modifies, or removes functionality defined in a PRD must be flagged before implementation.
 
-| File                       | Description                                |
-| -------------------------- | ------------------------------------------ |
-| `001-kanban-board.md`      | Generic kanban board for any OpenClaw user |
-| `002-system-monitoring.md` | Usage, sessions, cron runs, system health  |
+## Requirement Labels
 
-## Naming Convention
+Every PRD contains **labeled requirements** using the format:
 
-Files follow `XXX-short-name.md` pattern (e.g., `001-kanban-board.md`).
+```
+**[PRD-XXX-R01]** The system MUST [do something specific and testable].
+```
 
-## Screenshots
+Format: `PRD-{number}-R{seq}` where:
 
-Reference screenshots of the current UI (taken before PRD documentation was added):
+- `{number}` = PRD number (e.g., `001`, `005`)
+- `{seq}` = requirement sequence within that PRD (e.g., `01`, `02`)
 
-| File                                                             | Description            |
-| ---------------------------------------------------------------- | ---------------------- |
-| [`before-kanban.png`](../../screenshots/before-kanban.png)       | Kanban board interface |
-| [`before-system.png`](../../screenshots/before-system.png)       | System monitoring page |
-| [`before-dashboard.png`](../../screenshots/before-dashboard.png) | Dashboard overview     |
+Keywords follow [RFC 2119](https://www.rfc-editor.org/rfc/rfc2119):
 
-## Relationship to Nova Dashboard
+- **MUST / MUST NOT** — Absolute requirement or prohibition
+- **SHOULD / SHOULD NOT** — Strong recommendation, exceptions need justification
+- **MAY** — Optional, implementation discretion
 
-Claw Interface is a generic, open-source version of the Nova Dashboard. Victor-specific features (Tommy/social media, stocks pages) are stripped out, leaving a clean template that any OpenClaw user can deploy.
+## Requirement Index
+
+`REQUIREMENTS-INDEX.md` contains a machine-scannable flat index of ALL requirements. Rebuild with:
+
+```bash
+./scripts/generate-requirements-index.sh
+```
+
+## Modifying Requirements
+
+1. **Identify** the affected requirement label(s)
+2. **Flag** the conflict — agents must not silently violate requirements
+3. **Get approval** for significant changes
+4. **Update** PRD + index in the same PR
+5. **Reference** in commit: `Updates PRD-XXX-R01: [reason]`
+
+## Current PRDs
+
+- `001-kanban-board.md` — PRD-001: Kanban Board
+- `002-system-monitoring.md` — PRD-002: System Monitoring
+
+## PRD Template
+
+Use `_template.md` as a starting point for new PRDs.

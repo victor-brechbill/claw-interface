@@ -28,3 +28,20 @@
 - `MONGO_DATABASE` — Database name (default: `agent-dashboard`)
 - `DASHBOARD_PORT` — Server port (default: `3080`)
 - `VITE_REPOS` — Comma-separated list of repos for System page activity grids. Format: `Label:owner/repo,Label2:owner2/repo2` (e.g. `Dashboard:myorg/dashboard,API:myorg/api`)
+
+## ⚠️ Product Requirements (PRDs) — MANDATORY CHECK
+
+**Before implementing any feature or significant change:**
+
+1. **Read the requirements index:** `docs/product-requirements/REQUIREMENTS-INDEX.md`
+2. **Identify affected requirements** — scan for requirements related to the files/domain you're changing
+3. **Read relevant PRD sections** — if a requirement label appears related, read that PRD section for full context
+4. **If your change conflicts with a requirement:**
+   - **STOP** — do NOT silently violate, modify, or remove the requirement
+   - **Flag the conflict** in your output/commit message: `⚠️ CONFLICTS WITH [PRD-XXX-RNN]: [description]`
+   - **Do not proceed** until the conflict is resolved
+5. **If your change adds new behavior** that should be a requirement, note it — the PRD should be updated in the same PR
+
+**Requirements use RFC 2119 keywords:** MUST = mandatory, SHOULD = strong recommendation, MAY = optional.
+
+**If updating a requirement:** Update BOTH the PRD file AND re-run `./scripts/generate-requirements-index.sh` to rebuild the index.

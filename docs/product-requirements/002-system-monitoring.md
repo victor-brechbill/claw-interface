@@ -62,6 +62,27 @@ System monitoring provides OpenClaw users with visibility into AI agent sessions
 - **Configuration:** `GATEWAY_WS_URL`, `VITE_REPOS` for customization
 - **Data:** Session data read from OpenClaw gateway's local session files; system data from MongoDB and OS queries
 
+## Requirements
+
+### Sessions
+
+**[PRD-002-R01]** The system MUST provide a session list with status (active/idle/stale), agent, model, and token counts.
+**[PRD-002-R02]** The system MUST provide aggregated session statistics with per-model breakdown.
+**[PRD-002-R03]** The system MUST support deleting individual sessions.
+
+### System Health
+
+**[PRD-002-R04]** The system MUST provide cron job run history and historical data.
+**[PRD-002-R05]** The system MUST provide repo activity grids configurable via `VITE_REPOS` env var.
+**[PRD-002-R06]** The system MUST provide domain and SSL certificate status monitoring.
+**[PRD-002-R07]** The system MUST provide system diagnostics (doctor) with async execution and status/report endpoints.
+**[PRD-002-R08]** The system MUST monitor gateway WebSocket connection status.
+
+### Data Architecture
+
+**[PRD-002-R09]** The system MUST read session data from OpenClaw gateway's local session files on disk.
+**[PRD-002-R10]** The system MUST NOT provide CSV export or usage cost tracking — sessions API provides token counts only.
+
 ## Current State
 
 Fully implemented. Session tracking, system monitoring, cron history, and diagnostics are functional. Designed to work out-of-the-box for any OpenClaw deployment.
