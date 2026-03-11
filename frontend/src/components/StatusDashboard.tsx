@@ -68,7 +68,6 @@ const StatusDashboard: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchAgents();
     const interval = setInterval(fetchAgents, 3000);
     return () => clearInterval(interval);
@@ -84,7 +83,7 @@ const StatusDashboard: React.FC = () => {
         COMPLETION_MESSAGES[
           Math.floor(Math.random() * COMPLETION_MESSAGES.length)
         ];
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+
       setCompletionMessage(msg);
       const timeout = setTimeout(() => setCompletionMessage(null), 5000);
       return () => clearTimeout(timeout);
