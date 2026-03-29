@@ -1,0 +1,21 @@
+title = "gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Global allowlist for false positives"
+paths = [
+    '''\.env\.example$''',
+    '''\.env\.sample$''',
+    '''docs/.*\.md$''',
+    '''.*_test\.go$''',
+]
+regexTarget = "match"
+regexes = [
+    '''sk_test_[a-zA-Z0-9]+''',
+    '''pk_test_[a-zA-Z0-9]+''',
+    '''your-.*-here''',
+    '''REPLACE_ME''',
+    '''changeme''',
+]
