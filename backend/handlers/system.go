@@ -43,7 +43,7 @@ const (
 	oauthCodeTmpFile          = "code.txt.tmp"
 	oauthLogFile              = "refresh.log"
 	oauthRefreshTimeout       = 5 * time.Minute
-	defaultOAuthRefreshScript = "/home/ubuntu/clawd/scripts/oauth-refresh-interactive.py"
+	defaultOAuthRefreshScript = "/home/ubuntu/clawd/scripts/oauth-refresh-pkce.mjs"
 )
 
 type SystemStatsResponse struct {
@@ -1747,7 +1747,14 @@ func (h *SystemHandler) OAuthRefreshStart(w http.ResponseWriter, r *http.Request
 
 	// Use timeout context parented to shutdown context
 	cmdCtx, cmdCancel := context.WithTimeout(h.shutdownCtx, oauthRefreshTimeout)
-	cmd := exec.CommandContext(cmdCtx, "python3", scriptPath)
+	// Detect script type by extension
+	var runner string
+	if filepath.Ext(scriptPath) == ".mjs" || filepath.Ext(scriptPath) == ".js" {
+		runner = "node"
+	} else {
+		runner = "python3"
+	}
+	cmd := exec.CommandContext(cmdCtx, runner, scriptPath)
 	cmd.Env = append(os.Environ(), "HOME="+os.Getenv("HOME"), "OAUTH_REFRESH_DIR="+dir)
 
 	if err := cmd.Start(); err != nil {

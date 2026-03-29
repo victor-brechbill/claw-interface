@@ -82,7 +82,8 @@ export default function OAuthRefreshModal({
   };
 
   const handleSubmitCode = async () => {
-    const trimmed = code.trim();
+    // Strip the #state fragment if the user pasted the full redirect value
+    const trimmed = code.trim().split("#")[0];
     if (!trimmed) return;
     setSubmittingCode(true);
     try {
