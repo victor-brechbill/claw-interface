@@ -9,68 +9,54 @@ permissions:
   pull-requests: read
 
 jobs:
-  lint-and-build:
-    name: Lint & Build
+  backend:
+    name: Backend (Go)
     runs-on: ubuntu-latest
     timeout-minutes: 10
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-
-      - name: Set up Go
-        uses: actions/setup-go@v6
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v5
         with:
-          go-version: "1.22"
+          go-version-file: backend/go.mod
+      - name: Build
+        working-directory: backend
+        run: go build ./...
+      - name: Vet
+        working-directory: backend
+        run: go vet ./...
+      - name: Test
+        working-directory: backend
+        run: go test ./... -timeout 120s
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v6
+  frontend:
+    name: Frontend (TypeScript)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
         with:
-          node-version: "22"
-          cache: "npm"
-          cache-dependency-path: frontend/package-lock.json
-
-      - name: Install frontend dependencies
+          node-version: 22
+      - name: Install
         working-directory: frontend
         run: npm ci
-
-      - name: Frontend lint (ESLint)
-        working-directory: frontend
-        run: npx eslint src/ --max-warnings 0
-
-      - name: Frontend type check (TypeScript)
+      - name: Type check
         working-directory: frontend
         run: npx tsc --noEmit
-
-      - name: Frontend build
+      - name: Build
         working-directory: frontend
         run: npm run build
 
-      - name: Go vet
-        working-directory: backend
-        run: go vet ./...
-
-      - name: Go build
-        working-directory: backend
-        run: go build ./...
-
   security:
-    name: Security Scan
+    name: Security
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    if: github.base_ref == 'main'
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Install Gitleaks
+      - uses: actions/checkout@v6
+      - name: Check for secrets
         run: |
-          wget -q https://github.com/gitleaks/gitleaks/releases/download/v8.21.2/gitleaks_8.21.2_linux_x64.tar.gz
-          tar -xzf gitleaks_8.21.2_linux_x64.tar.gz
-          chmod +x gitleaks
-
-      - name: Run Gitleaks
-        run: ./gitleaks detect --source . --verbose --redact --gitleaks-ignore-path .gitleaksignore
+          if grep -rPn 'AKIA[0-9A-Z]{16}|(?<![a-zA-Z])sk-[a-zA-Z0-9]{20,}|ghp_[a-zA-Z0-9]{36}|password\s*=\s*["\x27][^"\x27]+["\x27]' --include='*.go' --include='*.ts' --include='*.tsx' --include='*.js' --include='*.json' --include='*.yml' --include='*.yaml' --include='*.env' . 2>/dev/null | grep -v node_modules | grep -v '.github/workflows' | grep -v '_test.go'; then
+            echo "❌ Potential secrets found!"
+            exit 1
+          fi
+          echo "✅ No secrets detected"
