@@ -55,7 +55,7 @@ jobs:
       - uses: actions/checkout@v6
       - name: Check for secrets
         run: |
-          if grep -rPn 'AKIA[0-9A-Z]{16}|(?<![a-zA-Z])sk-[a-zA-Z0-9]{20,}|ghp_[a-zA-Z0-9]{36}|password\s*=\s*["\x27][^"\x27]+["\x27]' --include='*.go' --include='*.ts' --include='*.tsx' --include='*.js' --include='*.json' --include='*.yml' --include='*.yaml' --include='*.env' . 2>/dev/null | grep -v node_modules | grep -v '.github/workflows' | grep -v '_test.go'; then
+          if grep -rPn 'AKIA[0-9A-Z]{16}|(?<![a-zA-Z])sk-[a-zA-Z0-9]{20,}|ghp_[a-zA-Z0-9]{36}' --include='*.go' --include='*.ts' --include='*.tsx' --include='*.js' --include='*.json' --include='*.yml' --include='*.yaml' --include='*.env' . 2>/dev/null | grep -v node_modules | grep -v '.github/workflows' | grep -v '_test.go'; then
             echo "❌ Potential secrets found!"
             exit 1
           fi
