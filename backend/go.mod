@@ -4,8 +4,8 @@ go 1.22
 
 require (
 	github.com/gorilla/websocket v1.5.3
-	go.mongodb.org/mongo-driver/v2 v2.5.1
-	go.uber.org/zap v1.27.1
+	go.mongodb.org/mongo-driver/v2 v2.6.0
+	go.uber.org/zap v1.28.0
 )
 
 require (
